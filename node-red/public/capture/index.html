@@ -53,6 +53,71 @@ Inspect the existing files first. Make the smallest functional change in flow/so
       </div>
     </section>
 
+    <section class="request-panel" id="functional-diff" aria-labelledby="diff-title">
+      <p class="eyebrow">Actual sanitized functional diff</p>
+      <h2 id="diff-title">The executed source change, readable in a normal page.</h2>
+      <pre class="request-text">baseline: 576f1a71bbc57e60b71c38d8146a41b212eca32d
+functional revision: d7980d74b0e69ad85e4f11e200f667f66b54f3ce
+
+--- accepted baseline live generator
++++ recorded live generator
+@@
+-temperatureC: round(24.2 + Math.sin(phase) * 1.5), thresholdC: 32,
++temperatureC: round(24.2 + Math.sin(phase) * 1.5), thresholdC: 30,
+
+The CNC teaching limit is deliberately aligned with the retained validation
+lesson before the margin is derived. Other station limits are unchanged.
+
+--- accepted baseline Node-RED response Function
++++ recorded Comfort margin response Function
+@@
+-snapshot.stations = Object.values(byId).map((station) =&gt; ({
+-  ...station,
+-  ageMs: Math.max(0, now - Date.parse(station.observedAt))
+-}));
++snapshot.stations = Object.values(byId).map((station) =&gt; {
++  const validTemperature = Number.isFinite(station.temperatureC);
++  const comfortMargin = validTemperature
++    ? Number((station.thresholdC - station.temperatureC).toFixed(1))
++    : null;
++  return {...station, comfort_margin_c: comfortMargin,
++    ageMs: Math.max(0, now - Date.parse(station.observedAt))};
++});
++const primary = snapshot.stations.find((station) =&gt; station.id === 'cnc-cell');
++snapshot.configured_demo_temperature_limit_c = primary.thresholdC;
++snapshot.validated_temperature_c =
++  Number.isFinite(primary.temperatureC) ? primary.temperatureC : null;
++snapshot.comfort_margin_c = primary.comfort_margin_c;
+
+--- accepted baseline validation response
++++ recorded validation response
+@@
+-if (![22,34].includes(raw)) reject();
++if (![22,30,34].includes(raw)) reject();
+@@
++validated_temperature_c: temperature,
++configured_demo_temperature_limit_c: 30,
++comfort_margin_c: Number((30 - temperature).toFixed(1)),
+
+--- accepted baseline dashboard
++++ recorded dashboard
+@@
++&lt;span&gt;Comfort margin&lt;/span&gt;
++&lt;strong data-field="comfort-margin"&gt;—&lt;/strong&gt;</pre>
+      <p>The downloadable <a href="comfort-margin.diff">focused diff artifact</a> and complete linked source remain available for reproduction.</p>
+
+      <p class="eyebrow fixture-label">Executed fixture and state checks</p>
+      <div class="docker-grid" aria-label="Comfort margin check summary">
+        <article><span>Below limit</span><strong>22 °C → +8 °C</strong></article>
+        <article><span>Above limit</span><strong>34 °C → −4 °C</strong></article>
+        <article><span>At limit</span><strong>30 °C → 0 °C</strong></article>
+        <article><span>Missing</span><strong><code>null</code> → Unavailable</strong></article>
+        <article><span>Malformed</span><strong>HTTP 400; previous valid state preserved</strong></article>
+        <article><span>Recovery</span><strong>Same-sample margin +2.5 °C</strong></article>
+      </div>
+      <p>Source unit tests, static checks, isolated staging contract and public contract passed. The dashboard value matched the same server sample in desktop and mobile Chromium.</p>
+    </section>
+
     <section class="docker-panel" aria-labelledby="docker-title">
       <p class="eyebrow">Actual bounded runtime</p>
       <h2 id="docker-title">Reproducible container, private control surface.</h2>

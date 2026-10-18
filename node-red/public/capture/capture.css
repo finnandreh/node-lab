@@ -32,4 +32,5 @@
 .docker-grid span, .docker-grid strong { display: block; }
 .docker-grid span { color: var(--green); font-size: .59rem; font-weight: 900; letter-spacing: .11em; text-transform: uppercase; }
 .docker-grid strong { margin-top: .45rem; color: #d2e5dd; line-height: 1.55; }
+.fixture-label { margin-top: 2.5rem; }
 @media (max-width: 760px) { .capture-main { width: min(calc(100% - 1.15rem), var(--max)); } .capture-facts, .capture-proof-grid { grid-template-columns: 1fr; } .capture-proof-grid { gap: 1.5rem; } .capture-hero { min-height: 0; padding-top: 7rem; } }

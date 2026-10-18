@@ -61,6 +61,12 @@ class PublicSourceContract(unittest.TestCase):
         self.assertIn("ACTUAL DOCKER EVIDENCE", capture)
         self.assertIn("Named <code>/data</code> volume", capture)
         self.assertIn("read-only root filesystem", capture)
+        self.assertIn("Actual sanitized functional diff", capture)
+        self.assertIn("thresholdC: 32", capture)
+        self.assertIn("thresholdC: 30", capture)
+        self.assertIn("22 °C → +8 °C", capture)
+        self.assertIn("34 °C → −4 °C", capture)
+        self.assertIn("HTTP 400; previous valid state preserved", capture)
 
     def test_public_page_contract(self):
         page = self.read("node-red/public/index.html")
