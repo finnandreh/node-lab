@@ -2,16 +2,16 @@ apiVersion: battery-node-cloud/v1
 kind: NodeTemplate
 metadata:
   id: synthetic-temperature-node
-  name: Node Lab synthetic temperature flow
-  version: 1.0.0
+  name: Node Lab live workshop emulation
+  version: 2.0.0-base.1
 spec:
   deviceId: synthetic-node-lab-001
   dashboardPath: /
   telemetry:
-    topic: local/node-lab/synthetic-temperature
+    topic: local/node-lab/live-workshop
     schema: telemetry.schema.json
-    staleAfterSeconds: 0
-    source: synthetic-only
+    staleAfterSeconds: 5
+    source: live-generated-emulation
   commands:
     viewer: []
     operator: []
@@ -19,9 +19,8 @@ spec:
   safety:
     maxOutputOnSeconds: 1
     outputOffBeforeOta: true
-    notes: No output or OTA command exists; required safety fields are fail-closed.
+    notes: No output or OTA command exists; public scenarios transform one response only and required safety fields are fail-closed.
   files:
     flows: node-red/flows.json
     settings: node-red/settings.js
     dockerfile: node-red/Dockerfile
-

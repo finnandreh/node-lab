@@ -10,50 +10,66 @@ NODE_RED = ROOT / "node-red"
 
 
 class PublicSourceContract(unittest.TestCase):
+    def read(self, relative):
+        return (ROOT / relative).read_text(encoding="utf-8")
+
     def test_json_files_parse(self):
-        for relative in (
-            "telemetry.schema.json",
-            "node-red/package.json",
-            "node-red/package-lock.json",
-            "node-red/flows.json",
-        ):
+        for relative in ("telemetry.schema.json", "node-red/package.json", "node-red/package-lock.json", "node-red/flows.json"):
             with self.subTest(relative=relative):
-                json.loads((ROOT / relative).read_text(encoding="utf-8"))
+                json.loads(self.read(relative))
 
     def test_locked_versions(self):
-        package = json.loads((NODE_RED / "package.json").read_text(encoding="utf-8"))
-        lock = json.loads((NODE_RED / "package-lock.json").read_text(encoding="utf-8"))
+        package = json.loads(self.read("node-red/package.json"))
+        lock = json.loads(self.read("node-red/package-lock.json"))
         self.assertEqual(package["dependencies"]["node-red"], "5.0.8")
         self.assertEqual(package["dependencies"]["@flowfuse/node-red-dashboard"], "1.33.0")
         self.assertEqual(lock["packages"][""]["name"], "node-lab-runtime")
-        self.assertEqual(lock["packages"][""]["version"], "1.0.0")
+        self.assertEqual(lock["packages"][""]["version"], "2.0.0-base.1")
 
-    def test_flow_contract(self):
-        flows = json.loads((NODE_RED / "flows.json").read_text(encoding="utf-8"))
+    def test_live_generator_and_request_scoped_scenarios(self):
+        flows = json.loads(self.read("node-red/flows.json"))
         by_id = {node["id"]: node for node in flows}
-        self.assertEqual(by_id["sample-http"]["url"], "/api/sample")
-        self.assertEqual(by_id["sample-http"]["method"], "post")
-        validator = by_id["validate-sample"]["func"]
-        threshold = by_id["threshold-rule"]["func"]
-        self.assertIn("[22,34]", validator)
-        self.assertIn("typeof raw !== 'number'", validator)
-        self.assertIn("NODE_LAB_ALLOWED_ORIGIN", validator)
-        self.assertIn("statusCode = 400", validator)
-        self.assertIn("temperature >= 30", threshold)
-        self.assertIn("synthetic-demo", threshold)
+        self.assertEqual(by_id["live-tick"]["repeat"], "1.5")
+        generator = by_id["generate-workshop-tick"]["func"]
+        response = by_id["build-live-response"]["func"]
+        self.assertIn("const stations = [", generator)
+        self.assertEqual(generator.count("id:'"), 3)
+        self.assertIn("flow.set('latestTick', tick)", generator)
+        self.assertIn("msg.req?.query?.scenario", response)
+        self.assertIn("scope:'this-response-only'", response)
+        self.assertIn("live-generated-emulation", response)
+        self.assertIn("messagesProcessed", response)
+        self.assertNotIn("flow.set('scenario'", response)
+        self.assertEqual(by_id["live-http"]["url"], "/api/live")
         self.assertEqual(by_id["health-http"]["url"], "/healthz")
 
+    def test_reserved_change_is_functionally_absent(self):
+        executing = "\n".join((self.read("node-red/flows.json"), self.read("node-red/public/app.js"), self.read("telemetry.schema.json")))
+        self.assertNotIn("comfort_margin_c", executing)
+        self.assertNotIn("comfortMarginC", executing)
+        page = self.read("node-red/public/index.html")
+        self.assertIn("reserved Comfort margin extension is deliberately absent", page)
+        self.assertNotIn('data-field="comfort-margin"', page)
+
     def test_public_page_contract(self):
-        page = (NODE_RED / "public" / "index.html").read_text(encoding="utf-8")
+        page = self.read("node-red/public/index.html")
         self.assertIn("<title>Node Lab | Teach the Company</title>", page)
         self.assertIn('rel="canonical" href="https://teachthecompany.com/node-lab/"', page)
-        self.assertIn("SYNTHETIC · NO HARDWARE", page)
-        self.assertIn("No live AI inference", page)
+        self.assertIn("LIVE-GENERATED SIMULATION", page)
+        self.assertIn("REAL APPLICATION TELEMETRY", page)
+        for station in ("CNC Cell", "Curing Oven", "Packing Line"):
+            self.assertIn(station, page)
         self.assertNotRegex(page, re.compile(r"<script(?![^>]*\bsrc=)", re.I))
         self.assertNotRegex(page, re.compile(r"<style\b", re.I))
 
+    def test_schema_is_packaged_from_single_source(self):
+        dockerfile = self.read("node-red/Dockerfile")
+        self.assertIn("COPY telemetry.schema.json ./seed/public/source/telemetry.schema.json", dockerfile)
+        schema = json.loads(self.read("telemetry.schema.json"))
+        self.assertEqual(schema["properties"]["schemaVersion"]["const"], "2.0.0-base")
+
     def test_default_compose_is_loopback_and_restricted(self):
-        compose = (ROOT / "compose.yaml").read_text(encoding="utf-8")
+        compose = self.read("compose.yaml")
         self.assertIn('"127.0.0.1:1880:1880"', compose)
         self.assertIn('NODE_LAB_EDITOR_ENABLED: "0"', compose)
         self.assertIn("read_only: true", compose)
@@ -62,7 +78,7 @@ class PublicSourceContract(unittest.TestCase):
         self.assertNotIn("network_mode: host", compose)
 
     def test_production_admin_root_is_disabled(self):
-        settings = (NODE_RED / "settings.js").read_text(encoding="utf-8")
+        settings = self.read("node-red/settings.js")
         self.assertIn('httpAdminRoot: editorEnabled ? "/admin" : false', settings)
 
     def test_no_private_topology_in_public_tree(self):
@@ -74,9 +90,8 @@ class PublicSourceContract(unittest.TestCase):
             re.compile(r"\bprivate_address\b", re.I),
             re.compile(r"\boperator_route\b", re.I),
         )
-        ignored = {".git"}
         for path in ROOT.rglob("*"):
-            if not path.is_file() or any(part in ignored for part in path.parts):
+            if not path.is_file() or ".git" in path.parts:
                 continue
             try:
                 text = path.read_text(encoding="utf-8")

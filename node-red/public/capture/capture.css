@@ -1,0 +1,23 @@
+.capture-page { min-height: 100vh; }
+.capture-main { width: min(calc(100% - 2.5rem), var(--max)); margin: 0 auto; }
+.capture-hero { min-height: 70vh; display: grid; align-content: center; padding: 7rem 0 4rem; }
+.capture-hero h1 { max-width: 1000px; margin: .8rem 0 1rem; }
+.capture-hero > p:not(.eyebrow) { max-width: 820px; color: #99b5aa; font-size: 1.08rem; line-height: 1.7; }
+.capture-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-top: 2rem; }
+.capture-facts article { min-width: 0; padding: 1.1rem; border: 1px solid #315847; border-radius: 12px; background: #0b211a; }
+.capture-facts span, .capture-facts strong, .capture-facts code { display: block; }
+.capture-facts span { color: #78988b; font-size: .62rem; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; }
+.capture-facts strong, .capture-facts code { margin-top: .55rem; color: var(--green); overflow-wrap: anywhere; }
+.capture-proof-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 3rem; padding: 5rem 0; border-top: 1px solid var(--line-soft); }
+.capture-proof-grid h2, .absence-panel h2 { margin: .7rem 0 1rem; font-size: clamp(2.3rem, 5vw, 4.5rem); line-height: 1; letter-spacing: -.05em; }
+.capture-proof-grid p, .absence-panel p { color: #8faa9f; line-height: 1.7; }
+.capture-links { display: grid; gap: .7rem; }
+.capture-links a { display: block; padding: 1.15rem; border: 1px solid #315847; border-radius: 11px; background: #0b211a; text-decoration: none; }
+.capture-links a:hover, .capture-links a:focus-visible { border-color: var(--green); }
+.capture-links span, .capture-links strong { display: block; }
+.capture-links span { color: var(--green); font-size: .59rem; font-weight: 900; letter-spacing: .11em; }
+.capture-links strong { margin-top: .35rem; color: #d2e5dd; }
+.absence-panel { margin-bottom: 6rem; padding: 2rem; border: 1px solid #67583d; border-radius: 16px; background: #252015; }
+.absence-panel code { color: var(--amber); }
+.gate-note { margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid #55482f; }
+@media (max-width: 760px) { .capture-main { width: min(calc(100% - 1.15rem), var(--max)); } .capture-facts, .capture-proof-grid { grid-template-columns: 1fr; } .capture-proof-grid { gap: 1.5rem; } .capture-hero { min-height: 0; padding-top: 7rem; } }

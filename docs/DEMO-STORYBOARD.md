@@ -1,61 +1,42 @@
-# Node Lab — ten-minute recording storyboard
+# Node Lab — recording storyboard
 
-This is a plan for a later recording. No film is generated or published by the
-Node Lab release.
+This is a sanitized plan for a review-gated film. It does not claim the film is
+already generated or published.
 
-## 0:00 — The problem
+## Result and truth boundary
 
-Show how a small automation can become impossible to trust when the input,
-decision rule and output are hidden. Introduce the goal: one transparent flow
-with synthetic data and no hardware claim.
+Open the public dashboard and immediately identify the live-generated
+simulation, three fictional stations, real application counters, no hardware
+and no customer data.
 
-## 0:45 — Open Node Lab
+## Follow the actual flow
 
-Open the public page. Point out the **synthetic data**, **no hardware**, and
-**no live AI inference** labels before interacting.
+Correlate a changing sample ID and timestamp with the Node-RED inject and
+Function source. Explain why visitor scenarios modify only one read response
+and never become shared writable state.
 
-## 1:30 — Start Docker
+## Fault, stale signal and recovery
 
-In a clean local clone, run `docker compose -p node-lab-example up --detach
---build`, inspect `docker compose -p node-lab-example ps`, and request
-`/healthz`. Mention the named volume,
-loopback-only listener and non-root restrictions.
+Select Heating, then Fault. Show the CNC thermal trip and stale Packing Line
+signal. Select Recover and verify a fresh signal and controlled cooldown.
+Demonstrate an invalid request returning 400 without replacing the last valid
+screen state.
 
-## 2:30 — Inspect the flow
+## Inspect and reproduce
 
-Start the separate loopback-only editor profile. Walk from HTTP input through
-the allowlist function, 30 C function and HTTP response. Show the two private
-inject nodes. Never expose or proxy the editor.
+Open the public flow JSON, schema, prompt and source archive. Build the pinned
+image locally, run the contract test and compare the revision and archive hash
+with the read-only capture facts.
 
-## 4:00 — Normal and alert
+## Authentic reserved edit
 
-On the public page send 22 C, then 34 C. Read the actual JSON in browser
-developer tools and correlate it with the visible chart and status.
+Record the real bounded Comfort margin request only after the coordinated
+recording gate begins. Capture the actual edit, diff, deterministic fixtures,
+release and deployed readback. Do not use a fabricated terminal, replay or
+pre-completed source.
 
-## 5:15 — Edit the threshold privately
+## Limits and close
 
-In a disposable local editor copy, change the threshold to demonstrate where
-the decision lives. Do not alter the public runtime. Revert or discard the
-local edit after the explanation.
-
-## 6:15 — Failure and recovery
-
-Send invalid 99 C and show HTTP 400 with the previous accepted state retained.
-Then send 22 C and show recovery to normal.
-
-## 7:15 — AI prompt and artifact review
-
-Open `docs/AI-PROMPT.md` beside `node-red/flows.json`. Explain that Codex
-assisted source authoring, while deterministic validation and a human-owned
-release gate decided what shipped. Do not describe scripted output as live AI.
-
-## 8:30 — Reproduce from source
-
-Open the public repository, clone anonymously, build, run the contract test,
-and compare the local commit to the release reference.
-
-## 9:30 — Limits and next step
-
-Close with the exact limits: synthetic samples, no sensor, no actuator, no
-customer data, no live model, and no industrial safety claim. A future physical
-integration needs its own hardware, security and fail-safe acceptance.
+Repeat the limits: simulated workshop values, no physical sensor or actuator,
+no customer data, no live model and no industrial safety claim. Publication of
+the finished film remains separately review-gated.

@@ -1,60 +1,56 @@
 # Node Lab
 
-Node Lab is a small, inspectable Node-RED lesson: send a synthetic temperature,
-validate it, apply a 30 C threshold, and render the explicit result. The public
-interface and API are real; the sensor values are deliberately synthetic.
+Node Lab is an inspectable Node-RED workshop simulation. Its backend generates a
+fresh sample every 1.5 seconds for three fictional stations: CNC Cell, Curing
+Oven and Packing Line. The process values are emulated; the ticks, messages,
+uptime and generation timing are measured from the running application.
 
-The demo proves this sequence:
+The public interface demonstrates:
 
-1. `22 C` -> `NORMAL OPERATION`
-2. `34 C` -> `HIGH TEMPERATURE`
-3. `22 C` -> `NORMAL OPERATION`
-4. `99 C` -> HTTP `400`, with the last accepted browser state unchanged
+- continuously generated temperature, power and process values;
+- normal, heating, fault/stale and recovery views scoped to one visitor's
+  read-only response;
+- bounded event history and rolling charts in the open browser tab;
+- a retained validation lesson where 22 C and 34 C are accepted, while 99 C
+  and malformed values are rejected without replacing the last valid result;
+- source, schema and capture artifacts that can be inspected and reproduced.
 
-It does **not** connect a physical device, expose the Node-RED editor, call an
-AI inference API, or retain shared visitor state.
+It does **not** connect physical hardware, store a shared visitor scenario,
+expose the Node-RED editor, call an AI inference API or use customer data.
 
 ## Start locally
 
 Requirements: Docker Engine with Compose v2.
 
-```bash
-docker compose -p node-lab-example up --detach --build
-curl --fail http://127.0.0.1:1880/healthz
-```
+    docker compose -p node-lab-example up --detach --build
+    curl --fail http://127.0.0.1:1880/healthz
+    python3 tests/test_contract.py --base http://127.0.0.1:1880 --origin http://127.0.0.1:1880
 
-Open <http://127.0.0.1:1880/>. The default Compose listener is loopback-only.
+Open http://127.0.0.1:1880/. The default listener is loopback-only.
 
-Stop without deleting the named volume:
+    docker compose -p node-lab-example stop
 
-```bash
-docker compose -p node-lab-example stop
-```
-
-See [RUNBOOK.md](RUNBOOK.md) for status, health, update, backup, restore and
-explicit reset procedures.
+See RUNBOOK.md for the complete reusable lifecycle.
 
 ## Inspect the work
 
-- [Flow JSON](node-red/flows.json)
-- [Authoring prompt](docs/AI-PROMPT.md)
-- [Ten-minute recording storyboard](docs/DEMO-STORYBOARD.md)
-- [Telemetry result schema](telemetry.schema.json)
-- [Security and truth boundary](SECURITY.md)
-- [Credits](CREDITS.md)
+- Flow JSON: node-red/flows.json
+- Workshop snapshot schema: telemetry.schema.json
+- Authoring prompt: docs/AI-PROMPT.md
+- Recording storyboard: docs/DEMO-STORYBOARD.md
+- Security and truth boundary: SECURITY.md
+- Credits: CREDITS.md
 
 The production learning page is
-<https://teachthecompany.com/node-lab/> and the public repository is
-<https://github.com/finnandreh/node-lab>.
+https://teachthecompany.com/node-lab/ and the public repository is
+https://github.com/finnandreh/node-lab.
 
 ## AI assistance
 
-OpenAI Codex assisted with the flow and public explanation. Codex agents
-reviewed the generated artifacts and ran the deterministic checks under
-Finn's direction and deployment authorization. There is no model endpoint
-behind the demo.
+OpenAI Codex assisted source authoring, review and deterministic checks under
+Finn's deployment authorization. There is no model endpoint behind the demo.
 
 ## License
 
 Apache License 2.0. Node-RED and FlowFuse retain their own licenses and marks;
-see [CREDITS.md](CREDITS.md).
+see CREDITS.md.

@@ -1,14 +1,17 @@
 services:
   node-red:
     build:
-      context: ./node-red
-      dockerfile: Dockerfile
-    image: local/node-lab:1.0.0
+      context: .
+      dockerfile: node-red/Dockerfile
+    image: local/node-lab:2.0.0-base
     container_name: node-lab-example
     restart: "no"
     environment:
       NODE_LAB_EDITOR_ENABLED: "0"
       NODE_LAB_ALLOWED_ORIGIN: http://127.0.0.1:1880
+      NODE_LAB_SOURCE_REVISION: ${NODE_LAB_SOURCE_REVISION:-development}
+      NODE_LAB_SOURCE_ARCHIVE_SHA256: ${NODE_LAB_SOURCE_ARCHIVE_SHA256:-unavailable}
+      NODE_LAB_RECORDING_PHASE: ${NODE_LAB_RECORDING_PHASE:-base-build}
       TZ: Etc/UTC
     ports:
       - "127.0.0.1:1880:1880"
