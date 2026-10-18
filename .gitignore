@@ -1,5 +1,6 @@
 backups/
 evidence/
 *.log
+__pycache__/
+*.py[cod]
 node-red/public/source/node-lab-source-*.zip
-
