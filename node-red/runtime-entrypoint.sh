@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-release="1.0.0-public-1"
+release="1.0.0-public-2"
 marker="/data/.node-lab-release"
 current=""
 if [ -f "$marker" ]; then
