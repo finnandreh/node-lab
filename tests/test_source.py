@@ -24,7 +24,7 @@ class PublicSourceContract(unittest.TestCase):
         self.assertEqual(package["dependencies"]["node-red"], "5.0.8")
         self.assertEqual(package["dependencies"]["@flowfuse/node-red-dashboard"], "1.33.0")
         self.assertEqual(lock["packages"][""]["name"], "node-lab-runtime")
-        self.assertEqual(lock["packages"][""]["version"], "2.0.0-base.1")
+        self.assertEqual(lock["packages"][""]["version"], "2.0.0-base.2")
 
     def test_live_generator_and_request_scoped_scenarios(self):
         flows = json.loads(self.read("node-red/flows.json"))
@@ -61,6 +61,11 @@ class PublicSourceContract(unittest.TestCase):
             self.assertIn(station, page)
         self.assertNotRegex(page, re.compile(r"<script(?![^>]*\bsrc=)", re.I))
         self.assertNotRegex(page, re.compile(r"<style\b", re.I))
+
+    def test_utc_labels_use_utc_formatting(self):
+        app = self.read("node-red/public/app.js")
+        self.assertGreaterEqual(app.count('timeZone: "UTC"'), 2)
+        self.assertIn('})} UTC`', app)
 
     def test_schema_is_packaged_from_single_source(self):
         dockerfile = self.read("node-red/Dockerfile")

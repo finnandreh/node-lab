@@ -110,7 +110,7 @@
         const message = document.createElement("strong");
         message.textContent = event.message;
         const meta = document.createElement("small");
-        meta.textContent = `${event.id} · ${new Date(event.at).toLocaleTimeString("en-GB", { hour12: false })}`;
+        meta.textContent = `${event.id} · ${new Date(event.at).toLocaleTimeString("en-GB", { hour12: false, timeZone: "UTC" })} UTC`;
         body.append(message, meta);
         item.append(marker, body);
         list.append(item);
@@ -128,7 +128,7 @@
     text("hero-connection", "online");
     text("sample-key", `Sample ${snapshot.sampleKey}`);
     text("hero-sample", snapshot.sampleKey);
-    text("generated-time", `Server ${new Date(snapshot.generatedAt).toLocaleTimeString("en-GB", { hour12: false })} UTC`);
+    text("generated-time", `Server ${new Date(snapshot.generatedAt).toLocaleTimeString("en-GB", { hour12: false, timeZone: "UTC" })} UTC`);
     text("hero-generated", snapshot.generatedAt.replace("T", " ").replace(".000Z", "Z"));
     text("scenario-label", snapshot.scenario.label);
     text("hero-scenario", snapshot.scenario.label);
