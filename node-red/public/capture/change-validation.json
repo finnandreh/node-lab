@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "observed_utc": "2026-10-18T13:29:24Z",
+  "scope": "isolated release staging",
+  "functional_revision": "d7980d74b0e69ad85e4f11e200f667f66b54f3ce",
+  "candidate_archive_sha256": "c0bac660a03a9149ee35d49ebe4eccf1b1e6338fc3d77e9998cdb65276bc4efe",
+  "candidate_image_id": "sha256:26bb720328fc91c1d004de01cfc2f839186de98e388657838a2159f6fb89951a",
+  "checks": {
+    "source_unit_tests": "12 passed",
+    "javascript_parse": "passed",
+    "json_parse": "passed",
+    "compose_render": "passed",
+    "container_health": "healthy",
+    "contract": "passed"
+  },
+  "fixtures": {
+    "below_limit": {"temperature_c": 22, "limit_c": 30, "comfort_margin_c": 8},
+    "above_limit": {"temperature_c": 34, "limit_c": 30, "comfort_margin_c": -4},
+    "at_limit": {"temperature_c": 30, "limit_c": 30, "comfort_margin_c": 0},
+    "missing_observation": {"comfort_margin_c": null, "display": "Unavailable"},
+    "malformed_input": {"http_status": 400, "previous_valid_state_preserved": true},
+    "recovery": {"comfort_margin_c": 2.5}
+  },
+  "same_sample_contract": true,
+  "editor_api_denied": true,
+  "hardware_connected": false,
+  "customer_data_used": false
+}

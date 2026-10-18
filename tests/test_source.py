@@ -58,6 +58,9 @@ class PublicSourceContract(unittest.TestCase):
         self.assertIn("Actual submitted teaching request", capture)
         self.assertIn("Define comfort_margin_c as the configured demo temperature limit", capture)
         self.assertIn("not a simulated chat", capture)
+        self.assertIn("ACTUAL DOCKER EVIDENCE", capture)
+        self.assertIn("Named <code>/data</code> volume", capture)
+        self.assertIn("read-only root filesystem", capture)
 
     def test_public_page_contract(self):
         page = self.read("node-red/public/index.html")
@@ -95,6 +98,7 @@ class PublicSourceContract(unittest.TestCase):
         self.assertIn('"127.0.0.1:1880:1880"', compose)
         self.assertIn('NODE_LAB_EDITOR_ENABLED: "0"', compose)
         self.assertIn("read_only: true", compose)
+        self.assertIn("NODE_LAB_IMAGE_ID", compose)
         self.assertIn("no-new-privileges:true", compose)
         self.assertIn("cap_drop:", compose)
         self.assertNotIn("network_mode: host", compose)

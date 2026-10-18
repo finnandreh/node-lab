@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "source_ref": "v2.0.0",
+  "runtime_identity_endpoint": "../api/capture",
+  "health_endpoint": "../healthz",
+  "base_image": "nodered/node-red:5.0.4@sha256:10f40d0a83e7e5852b13d4d472b2006b05b1cca6d55e2f29a55a12c25a630cb6",
+  "runtime_package": "Node-RED 5.0.8",
+  "release_image": "local/node-lab:2.0.0",
+  "functional_release_observation": {
+    "observed_utc": "2026-10-18T13:32:35Z",
+    "image_id": "sha256:26bb720328fc91c1d004de01cfc2f839186de98e388657838a2159f6fb89951a",
+    "container_health": "healthy",
+    "restart_count": 0
+  },
+  "persistence": {
+    "type": "named volume",
+    "container_path": "/data",
+    "survives_container_recreation": true
+  },
+  "network": {
+    "type": "isolated project bridge",
+    "public_editor": false,
+    "production_admin_routes": "denied",
+    "portable_default_binding": "loopback only"
+  },
+  "process": {
+    "user": "node-red",
+    "read_only_root_filesystem": true,
+    "no_new_privileges": true,
+    "capabilities_dropped": "ALL",
+    "pid_limit": 128,
+    "memory_limit_mib": 384,
+    "cpu_limit": 0.75,
+    "restart_policy": "unless-stopped",
+    "healthcheck": "Node.js GET /healthz"
+  },
+  "privacy": {
+    "credentials_included": false,
+    "private_hostnames_included": false,
+    "private_addresses_included": false,
+    "station_identifiers_included": false
+  },
+  "note": "The dynamic runtime identity endpoint carries the exact final source revision, archive hash and image ID after evidence packaging; this file records the actual functional-release observation without claiming a self-referential image hash."
+}

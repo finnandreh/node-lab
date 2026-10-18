@@ -47,9 +47,22 @@ Inspect the existing files first. Make the smallest functional change in flow/so
         <a href="comfort-margin.diff"><span>FUNCTIONAL DIFF</span><strong>Recorded source and UI change</strong></a>
         <a href="change-validation.json"><span>CHECK RESULTS</span><strong>Arithmetic, malformed and recovery fixtures</strong></a>
         <a href="change-readback.json"><span>DEPLOYED READBACK</span><strong>Public same-sample API and UI evidence</strong></a>
+        <a href="docker-evidence.json"><span>ACTUAL DOCKER EVIDENCE</span><strong>Final image, container health and isolation</strong></a>
         <a href="../source/flows.json"><span>DEPLOYED FLOW</span><strong>Complete Node-RED JSON</strong></a>
         <a href="../source/node-lab-source-v2.0.0.zip"><span>RELEASE ARCHIVE</span><strong>Reproducible after-state source</strong></a>
       </div>
+    </section>
+
+    <section class="docker-panel" aria-labelledby="docker-title">
+      <p class="eyebrow">Actual bounded runtime</p>
+      <h2 id="docker-title">Reproducible container, private control surface.</h2>
+      <div class="docker-grid">
+        <article><span>Image</span><strong>Pinned Node-RED base and exact release image ID</strong></article>
+        <article><span>State</span><strong>Healthy project container with restart and healthcheck evidence</strong></article>
+        <article><span>Persistence</span><strong>Named <code>/data</code> volume retained across recreation</strong></article>
+        <article><span>Boundary</span><strong>Isolated network, editor disabled publicly, read-only root filesystem</strong></article>
+      </div>
+      <p>The linked <a href="docker-evidence.json">sanitized runtime record</a> is captured from the actual release. It contains no credentials, private hostnames, internal addresses or station identifiers.</p>
     </section>
 
     <section class="absence-panel" aria-labelledby="formula-title">

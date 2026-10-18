@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "observed_utc": "2026-10-18T13:32:35Z",
+  "public_path": "/node-lab/",
+  "functional_revision": "d7980d74b0e69ad85e4f11e200f667f66b54f3ce",
+  "sample": {
+    "sample_key": "NL-00000042",
+    "generated_at": "2026-10-18T13:32:06.561Z",
+    "station": "cnc-cell",
+    "configured_demo_temperature_limit_c": 30,
+    "validated_temperature_c": 25.7,
+    "comfort_margin_c": 4.3,
+    "same_sample_arithmetic": true
+  },
+  "public_contract": {
+    "passed": true,
+    "fixtures": "22:8, 34:-4, 30:0",
+    "missing_observation": "null / Unavailable",
+    "malformed_input": "HTTP 400 and previous valid state preserved",
+    "recovery_margin_c": 2.5,
+    "editor_admin": "denied"
+  },
+  "source": {
+    "kind": "live-generated-emulation",
+    "hardware_connected": false,
+    "physical_sensors": false,
+    "customer_data": false
+  },
+  "browser_final": "pending final evidence image"
+}
