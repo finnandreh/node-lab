@@ -100,6 +100,7 @@
             <p>Aggregate software measurements only—no visitor identity, host details or customer metrics.</p>
           </div>
           <div class="runtime-grid">
+            <article class="comfort-summary" data-comfort-state="waiting"><span>Comfort margin</span><strong><b id="comfort-margin-value">—</b> °C</strong><small id="comfort-margin-source">CNC Cell · waiting for sample</small></article>
             <article><span>Ticks generated</span><strong id="metric-ticks">—</strong><small>backend scheduler count</small></article>
             <article><span>Messages processed</span><strong id="metric-messages">—</strong><small>tick + API flow messages</small></article>
             <article><span>Flow uptime</span><strong id="metric-uptime">—</strong><small>since this flow started</small></article>
@@ -114,6 +115,7 @@
             <div class="station-stats">
               <div><span>Power</span><strong data-field="power">—</strong></div>
               <div><span data-field="process-label">Cycle progress</span><strong data-field="process">—</strong></div>
+              <div><span>Comfort margin</span><strong data-field="comfort-margin">—</strong></div>
               <div><span>Signal age</span><strong data-field="age">—</strong></div>
             </div>
             <svg class="station-chart" viewBox="0 0 600 120" preserveAspectRatio="none" role="img" aria-label="CNC Cell rolling emulated temperature">
@@ -129,6 +131,7 @@
             <div class="station-stats">
               <div><span>Power</span><strong data-field="power">—</strong></div>
               <div><span data-field="process-label">Batch progress</span><strong data-field="process">—</strong></div>
+              <div><span>Comfort margin</span><strong data-field="comfort-margin">—</strong></div>
               <div><span>Signal age</span><strong data-field="age">—</strong></div>
             </div>
             <svg class="station-chart" viewBox="0 0 600 120" preserveAspectRatio="none" role="img" aria-label="Curing Oven rolling emulated temperature">
@@ -144,6 +147,7 @@
             <div class="station-stats">
               <div><span>Power</span><strong data-field="power">—</strong></div>
               <div><span data-field="process-label">Throughput</span><strong data-field="process">—</strong></div>
+              <div><span>Comfort margin</span><strong data-field="comfort-margin">—</strong></div>
               <div><span>Signal age</span><strong data-field="age">—</strong></div>
             </div>
             <svg class="station-chart" viewBox="0 0 600 120" preserveAspectRatio="none" role="img" aria-label="Packing Line rolling emulated temperature">
@@ -171,10 +175,12 @@
           <p class="card-label">LAST ACCEPTED VALIDATION RESULT</p>
           <div><strong id="validation-value">22</strong><span>°C</span></div>
           <h3 id="validation-status">Normal operation</h3>
+          <p>Comfort margin <strong id="validation-margin">8.0 °C</strong></p>
           <p id="validation-message" aria-live="polite">Ready for a bounded sample.</p>
         </div>
         <div class="validation-controls" aria-label="Fixed validation samples">
           <button type="button" data-temperature="22" data-label="normal"><strong>Normal</strong><small>POST 22 °C</small></button>
+          <button type="button" data-temperature="30" data-label="at limit"><strong>At limit</strong><small>POST 30 °C</small></button>
           <button type="button" data-temperature="34" data-label="alert"><strong>Alert</strong><small>POST 34 °C</small></button>
           <button type="button" data-temperature="22" data-label="recovery"><strong>Recover</strong><small>POST 22 °C</small></button>
           <button class="reject-button" type="button" data-temperature="99" data-label="invalid"><strong>Invalid</strong><small>POST 99 °C</small></button>
@@ -204,22 +210,22 @@
 
     <section class="capture-section" id="capture-proof" aria-labelledby="capture-title">
       <div class="section-heading compact">
-        <div><p class="eyebrow">Authentic recording gate</p><h2 id="capture-title">A real before-state, ready for a real Codex change.</h2></div>
-        <p>The reserved Comfort margin extension is deliberately absent from this baseline. It will be edited, tested and released only after the matching RECORDING-START.</p>
+        <div><p class="eyebrow">Authentic recorded change</p><h2 id="capture-title">One real request, diff, check and release.</h2></div>
+        <p>Comfort margin was added to the actual Node-RED response path during the coordinated recording. The evidence view keeps the accepted baseline and deployed after-state inspectable.</p>
       </div>
       <div class="capture-grid">
         <article class="capture-card">
-          <span class="capture-state" id="capture-state">BASE BUILD</span>
+          <span class="capture-state" id="capture-state">RECORDED CHANGE</span>
           <h3>Read-only capture evidence</h3>
           <p>No fake terminal, generated chat or public trigger. These links expose sanitized artifacts from actual source and checks.</p>
           <dl><div><dt>Source revision</dt><dd id="capture-revision">development</dd></div><div><dt>Archive SHA-256</dt><dd id="capture-archive">unavailable</dd></div></dl>
           <a class="button primary" href="capture/">Open capture view</a>
         </article>
         <article class="capture-card reserved-card">
-          <span class="capture-state reserved">RESERVED</span>
+          <span class="capture-state">RELEASED</span>
           <h3>Comfort margin</h3>
-          <p>Planned functional addition: configured demo limit minus validated temperature, with a new API field, dashboard card and arithmetic checks.</p>
-          <p class="absence-proof">Baseline contract: field absent · card absent · recording not started</p>
+          <p>Configured demo limit minus validated temperature, with positive, zero, negative and unavailable handling in the API and dashboard.</p>
+          <p class="absence-proof">Recorded path: actual Function edit · deterministic fixtures · public same-sample readback</p>
         </article>
       </div>
     </section>
@@ -231,14 +237,14 @@
         <p>The public repository contains the pinned Docker runtime, exported flow JSON, schema, tests, setup guide and a sanitized recording evidence view. Private host topology and production credentials are excluded.</p>
         <div class="hero-actions">
           <a class="button primary" href="https://github.com/finnandreh/node-lab">View on GitHub</a>
-          <a class="button secondary" href="source/node-lab-source-v2.0.0-base.zip" download>Download baseline source</a>
+          <a class="button secondary" href="source/node-lab-source-v2.0.0.zip" download>Download released source</a>
         </div>
       </div>
       <div class="source-list">
         <a href="source/flows.json"><span>FLOW JSON</span><strong>Actual deployed nodes and functions</strong></a>
         <a href="source/telemetry.schema.json"><span>SCHEMA</span><strong>Workshop snapshot contract</strong></a>
         <a href="source/ai-prompt.md"><span>PROMPT</span><strong>Sanitized authoring instruction</strong></a>
-        <a href="capture/"><span>EVIDENCE</span><strong>Real baseline capture artifacts</strong></a>
+        <a href="capture/"><span>EVIDENCE</span><strong>Real request, diff, checks and deployed readback</strong></a>
       </div>
     </section>
   </main>

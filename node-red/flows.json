@@ -21,7 +21,15 @@
     "type": "inject",
     "z": "node-lab-flow",
     "name": "Generate workshop tick every 1.5 s",
-    "props": [{"p": "payload"}, {"p": "topic", "vt": "str"}],
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
     "repeat": "1.5",
     "crontab": "",
     "once": true,
@@ -31,14 +39,18 @@
     "topic": "node-lab/live-tick",
     "x": 210,
     "y": 140,
-    "wires": [["generate-workshop-tick"]]
+    "wires": [
+      [
+        "generate-workshop-tick"
+      ]
+    ]
   },
   {
     "id": "generate-workshop-tick",
     "type": "function",
     "z": "node-lab-flow",
     "name": "Generate three emulated stations",
-    "func": "const started = Date.now();\nconst round = (value, digits = 1) => Number(value.toFixed(digits));\nconst sequence = Number(flow.get('sampleSequence') || 0) + 1;\nconst appStartedAt = Number(flow.get('appStartedAt') || started);\nflow.set('appStartedAt', appStartedAt);\nflow.set('sampleSequence', sequence);\nconst phase = sequence / 3;\nconst generatedAt = new Date(started).toISOString();\nconst sampleKey = `NL-${String(sequence).padStart(8, '0')}`;\nconst stations = [\n  {\n    id:'cnc-cell', name:'CNC Cell', zone:'Machining bay', state:'RUNNING', health:'NORMAL', quality:'good',\n    observedAt:generatedAt, temperatureC:round(24.2 + Math.sin(phase) * 1.5), thresholdC:32,\n    powerKw:round(4.8 + Math.cos(phase * 0.8) * 0.7), processValue:Math.round((sequence * 7) % 100),\n    processLabel:'Cycle progress', processUnit:'%'\n  },\n  {\n    id:'curing-oven', name:'Curing Oven', zone:'Finishing bay', state:'HOLDING', health:'NORMAL', quality:'good',\n    observedAt:generatedAt, temperatureC:round(68.5 + Math.sin(phase * 0.65) * 3.8), thresholdC:82,\n    powerKw:round(8.7 + Math.cos(phase * 0.55) * 1.2), processValue:Math.round((sequence * 4 + 35) % 100),\n    processLabel:'Batch progress', processUnit:'%'\n  },\n  {\n    id:'packing-line', name:'Packing Line', zone:'Dispatch bay', state:'RUNNING', health:'NORMAL', quality:'good',\n    observedAt:generatedAt, temperatureC:round(28.8 + Math.sin(phase * 1.2) * 1.1), thresholdC:42,\n    powerKw:round(2.5 + Math.cos(phase) * 0.35), processValue:Math.round(44 + Math.sin(phase * 0.9) * 5),\n    processLabel:'Throughput', processUnit:' packs/min'\n  }\n];\nconst generationLatencyMs = Math.max(0, Date.now() - started);\nconst tick = {schemaVersion:'2.0.0-base',sampleId:sequence,sampleKey,generatedAt,intervalMs:1500,stations,generationLatencyMs};\nflow.set('latestTick', tick);\nflow.set('ticksGenerated', sequence);\nflow.set('messagesProcessed', Number(flow.get('messagesProcessed') || 0) + 1);\nnode.status({fill:'green',shape:'dot',text:`${sampleKey} · ${stations.length} emulated stations`});\nreturn null;",
+    "func": "const started = Date.now();\nconst round = (value, digits = 1) => Number(value.toFixed(digits));\nconst sequence = Number(flow.get('sampleSequence') || 0) + 1;\nconst appStartedAt = Number(flow.get('appStartedAt') || started);\nflow.set('appStartedAt', appStartedAt);\nflow.set('sampleSequence', sequence);\nconst phase = sequence / 3;\nconst generatedAt = new Date(started).toISOString();\nconst sampleKey = `NL-${String(sequence).padStart(8, '0')}`;\nconst stations = [\n  {\n    id:'cnc-cell', name:'CNC Cell', zone:'Machining bay', state:'RUNNING', health:'NORMAL', quality:'good',\n    observedAt:generatedAt, temperatureC:round(24.2 + Math.sin(phase) * 1.5), thresholdC:30,\n    powerKw:round(4.8 + Math.cos(phase * 0.8) * 0.7), processValue:Math.round((sequence * 7) % 100),\n    processLabel:'Cycle progress', processUnit:'%'\n  },\n  {\n    id:'curing-oven', name:'Curing Oven', zone:'Finishing bay', state:'HOLDING', health:'NORMAL', quality:'good',\n    observedAt:generatedAt, temperatureC:round(68.5 + Math.sin(phase * 0.65) * 3.8), thresholdC:82,\n    powerKw:round(8.7 + Math.cos(phase * 0.55) * 1.2), processValue:Math.round((sequence * 4 + 35) % 100),\n    processLabel:'Batch progress', processUnit:'%'\n  },\n  {\n    id:'packing-line', name:'Packing Line', zone:'Dispatch bay', state:'RUNNING', health:'NORMAL', quality:'good',\n    observedAt:generatedAt, temperatureC:round(28.8 + Math.sin(phase * 1.2) * 1.1), thresholdC:42,\n    powerKw:round(2.5 + Math.cos(phase) * 0.35), processValue:Math.round(44 + Math.sin(phase * 0.9) * 5),\n    processLabel:'Throughput', processUnit:' packs/min'\n  }\n];\nconst generationLatencyMs = Math.max(0, Date.now() - started);\nconst tick = {schemaVersion:'2.0.0',sampleId:sequence,sampleKey,generatedAt,intervalMs:1500,stations,generationLatencyMs};\nflow.set('latestTick', tick);\nflow.set('ticksGenerated', sequence);\nflow.set('messagesProcessed', Number(flow.get('messagesProcessed') || 0) + 1);\nnode.status({fill:'green',shape:'dot',text:`${sampleKey} · ${stations.length} emulated stations`});\nreturn null;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
@@ -46,7 +58,9 @@
     "libs": [],
     "x": 520,
     "y": 140,
-    "wires": [[]]
+    "wires": [
+      []
+    ]
   },
   {
     "id": "live-http",
@@ -59,14 +73,18 @@
     "swaggerDoc": "",
     "x": 210,
     "y": 240,
-    "wires": [["build-live-response"]]
+    "wires": [
+      [
+        "build-live-response"
+      ]
+    ]
   },
   {
     "id": "build-live-response",
     "type": "function",
     "z": "node-lab-flow",
     "name": "Apply request-only scenario",
-    "func": "const builtStarted = Date.now();\nconst allowed = {\n  normal:{label:'Normal shift'},\n  heating:{label:'Heating load'},\n  fault:{label:'Fault and stale signal'},\n  recover:{label:'Controlled recovery'}\n};\nconst requested = String(msg.req?.query?.scenario || 'normal').toLowerCase();\nmsg.headers = {'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'};\nif (!Object.prototype.hasOwnProperty.call(allowed, requested)) {\n  msg.statusCode = 400;\n  msg.payload = {accepted:false,error:'scenario must be normal, heating, fault or recover'};\n  return msg;\n}\nconst tick = flow.get('latestTick');\nif (!tick) {\n  msg.statusCode = 503;\n  msg.payload = {accepted:false,error:'live generator is starting'};\n  return msg;\n}\nconst now = Date.now();\nconst snapshot = JSON.parse(JSON.stringify(tick));\nconst byId = Object.fromEntries(snapshot.stations.map((station) => [station.id, station]));\nconst events = [];\nif (requested === 'normal') {\n  events.push({level:'info',stationId:null,message:'All emulated workshop signals are inside their teaching limits.'});\n}\nif (requested === 'heating') {\n  byId['cnc-cell'].temperatureC = Number((byId['cnc-cell'].temperatureC + 3.5).toFixed(1));\n  byId['cnc-cell'].powerKw = Number((byId['cnc-cell'].powerKw + 1.1).toFixed(1));\n  byId['cnc-cell'].state = 'LOAD RISING';\n  byId['cnc-cell'].health = 'WATCH';\n  byId['curing-oven'].temperatureC = Number((byId['curing-oven'].temperatureC + 8).toFixed(1));\n  byId['curing-oven'].powerKw = Number((byId['curing-oven'].powerKw + 2.5).toFixed(1));\n  byId['curing-oven'].state = 'HEATING';\n  byId['curing-oven'].health = 'WATCH';\n  events.push({level:'watch',stationId:'curing-oven',message:'Heating load is rising but remains below the emulated limit.'});\n}\nif (requested === 'fault') {\n  byId['cnc-cell'].temperatureC = Number((byId['cnc-cell'].thresholdC + 5.2).toFixed(1));\n  byId['cnc-cell'].powerKw = 0.6;\n  byId['cnc-cell'].state = 'THERMAL TRIP';\n  byId['cnc-cell'].health = 'ALERT';\n  byId['packing-line'].temperatureC = null;\n  byId['packing-line'].powerKw = null;\n  byId['packing-line'].quality = 'missing';\n  byId['packing-line'].observedAt = new Date(now - 10000).toISOString();\n  byId['packing-line'].state = 'SIGNAL LOST';\n  byId['packing-line'].health = 'STALE';\n  events.push({level:'alert',stationId:'cnc-cell',message:'Thermal trip: emulated temperature crossed its limit.'});\n  events.push({level:'alert',stationId:'packing-line',message:'Missing signal: the last emulated observation is stale.'});\n}\nif (requested === 'recover') {\n  byId['cnc-cell'].temperatureC = Number((byId['cnc-cell'].thresholdC - 2.5).toFixed(1));\n  byId['cnc-cell'].powerKw = 2.1;\n  byId['cnc-cell'].state = 'COOL-DOWN';\n  byId['cnc-cell'].health = 'RECOVERING';\n  byId['curing-oven'].state = 'HOLDING';\n  byId['packing-line'].state = 'RESTARTED';\n  events.push({level:'recovery',stationId:'cnc-cell',message:'Recovery confirmed: valid emulated temperature is below the limit.'});\n  events.push({level:'info',stationId:'packing-line',message:'Fresh packing-line signal restored for this response.'});\n}\nsnapshot.stations = Object.values(byId).map((station) => ({...station,ageMs:Math.max(0, now - Date.parse(station.observedAt))}));\nconst apiResponses = Number(flow.get('apiResponses') || 0) + 1;\nflow.set('apiResponses', apiResponses);\nconst messagesProcessed = Number(flow.get('messagesProcessed') || 0) + 1;\nflow.set('messagesProcessed', messagesProcessed);\nconst appStartedAt = Number(flow.get('appStartedAt') || now);\nsnapshot.scenario = {id:requested,label:allowed[requested].label,scope:'this-response-only'};\nsnapshot.source = {kind:'live-generated-emulation',hardwareConnected:false,physicalSensors:false,customerData:false};\nsnapshot.events = events.map((event,index) => ({...event,id:`${snapshot.sampleKey}-E${index + 1}`,at:snapshot.generatedAt}));\nsnapshot.runtime = {\n  nodeRedVersion:'5.0.8',\n  flowVersion:'2.0.0-base',\n  uptimeSeconds:Math.max(0, Math.floor((now - appStartedAt) / 1000)),\n  ticksGenerated:Number(flow.get('ticksGenerated') || 0),\n  apiResponses,\n  messagesProcessed,\n  generationLatencyMs:Number(snapshot.generationLatencyMs || 0),\n  responseBuildMs:Math.max(0, Date.now() - builtStarted),\n  tickAgeMs:Math.max(0, now - Date.parse(snapshot.generatedAt)),\n  generatorIntervalMs:1500\n};\nmsg.statusCode = 200;\nmsg.payload = snapshot;\nreturn msg;",
+    "func": "const builtStarted = Date.now();\nconst allowed = {\n  normal:{label:'Normal shift'},\n  heating:{label:'Heating load'},\n  fault:{label:'Fault and stale signal'},\n  recover:{label:'Controlled recovery'}\n};\nconst requested = String(msg.req?.query?.scenario || 'normal').toLowerCase();\nmsg.headers = {'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'};\nif (!Object.prototype.hasOwnProperty.call(allowed, requested)) {\n  msg.statusCode = 400;\n  msg.payload = {accepted:false,error:'scenario must be normal, heating, fault or recover'};\n  return msg;\n}\nconst tick = flow.get('latestTick');\nif (!tick) {\n  msg.statusCode = 503;\n  msg.payload = {accepted:false,error:'live generator is starting'};\n  return msg;\n}\nconst now = Date.now();\nconst snapshot = JSON.parse(JSON.stringify(tick));\nconst byId = Object.fromEntries(snapshot.stations.map((station) => [station.id, station]));\nconst events = [];\nif (requested === 'normal') {\n  events.push({level:'info',stationId:null,message:'All emulated workshop signals are inside their teaching limits.'});\n}\nif (requested === 'heating') {\n  byId['cnc-cell'].temperatureC = Number((byId['cnc-cell'].temperatureC + 3.5).toFixed(1));\n  byId['cnc-cell'].powerKw = Number((byId['cnc-cell'].powerKw + 1.1).toFixed(1));\n  byId['cnc-cell'].state = 'LOAD RISING';\n  byId['cnc-cell'].health = 'WATCH';\n  byId['curing-oven'].temperatureC = Number((byId['curing-oven'].temperatureC + 8).toFixed(1));\n  byId['curing-oven'].powerKw = Number((byId['curing-oven'].powerKw + 2.5).toFixed(1));\n  byId['curing-oven'].state = 'HEATING';\n  byId['curing-oven'].health = 'WATCH';\n  events.push({level:'watch',stationId:'curing-oven',message:'Heating load is rising but remains below the emulated limit.'});\n}\nif (requested === 'fault') {\n  byId['cnc-cell'].temperatureC = Number((byId['cnc-cell'].thresholdC + 5.2).toFixed(1));\n  byId['cnc-cell'].powerKw = 0.6;\n  byId['cnc-cell'].state = 'THERMAL TRIP';\n  byId['cnc-cell'].health = 'ALERT';\n  byId['packing-line'].temperatureC = null;\n  byId['packing-line'].powerKw = null;\n  byId['packing-line'].quality = 'missing';\n  byId['packing-line'].observedAt = new Date(now - 10000).toISOString();\n  byId['packing-line'].state = 'SIGNAL LOST';\n  byId['packing-line'].health = 'STALE';\n  events.push({level:'alert',stationId:'cnc-cell',message:'Thermal trip: emulated temperature crossed its limit.'});\n  events.push({level:'alert',stationId:'packing-line',message:'Missing signal: the last emulated observation is stale.'});\n}\nif (requested === 'recover') {\n  byId['cnc-cell'].temperatureC = Number((byId['cnc-cell'].thresholdC - 2.5).toFixed(1));\n  byId['cnc-cell'].powerKw = 2.1;\n  byId['cnc-cell'].state = 'COOL-DOWN';\n  byId['cnc-cell'].health = 'RECOVERING';\n  byId['curing-oven'].state = 'HOLDING';\n  byId['packing-line'].state = 'RESTARTED';\n  events.push({level:'recovery',stationId:'cnc-cell',message:'Recovery confirmed: valid emulated temperature is below the limit.'});\n  events.push({level:'info',stationId:'packing-line',message:'Fresh packing-line signal restored for this response.'});\n}\nsnapshot.stations = Object.values(byId).map((station) => {\n  const validTemperature = Number.isFinite(station.temperatureC);\n  const comfortMargin = validTemperature ? Number((station.thresholdC - station.temperatureC).toFixed(1)) : null;\n  return {...station,comfort_margin_c:comfortMargin,ageMs:Math.max(0, now - Date.parse(station.observedAt))};\n});\nconst primary = snapshot.stations.find((station) => station.id === 'cnc-cell');\nsnapshot.configured_demo_temperature_limit_c = primary.thresholdC;\nsnapshot.validated_temperature_c = Number.isFinite(primary.temperatureC) ? primary.temperatureC : null;\nsnapshot.comfort_margin_c = primary.comfort_margin_c;\nconst apiResponses = Number(flow.get('apiResponses') || 0) + 1;\nflow.set('apiResponses', apiResponses);\nconst messagesProcessed = Number(flow.get('messagesProcessed') || 0) + 1;\nflow.set('messagesProcessed', messagesProcessed);\nconst appStartedAt = Number(flow.get('appStartedAt') || now);\nsnapshot.scenario = {id:requested,label:allowed[requested].label,scope:'this-response-only'};\nsnapshot.source = {kind:'live-generated-emulation',hardwareConnected:false,physicalSensors:false,customerData:false};\nsnapshot.events = events.map((event,index) => ({...event,id:`${snapshot.sampleKey}-E${index + 1}`,at:snapshot.generatedAt}));\nsnapshot.runtime = {\n  nodeRedVersion:'5.0.8',\n  flowVersion:'2.0.0',\n  uptimeSeconds:Math.max(0, Math.floor((now - appStartedAt) / 1000)),\n  ticksGenerated:Number(flow.get('ticksGenerated') || 0),\n  apiResponses,\n  messagesProcessed,\n  generationLatencyMs:Number(snapshot.generationLatencyMs || 0),\n  responseBuildMs:Math.max(0, Date.now() - builtStarted),\n  tickAgeMs:Math.max(0, now - Date.parse(snapshot.generatedAt)),\n  generatorIntervalMs:1500\n};\nmsg.statusCode = 200;\nmsg.payload = snapshot;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
@@ -74,7 +92,11 @@
     "libs": [],
     "x": 510,
     "y": 240,
-    "wires": [["live-response"]]
+    "wires": [
+      [
+        "live-response"
+      ]
+    ]
   },
   {
     "id": "live-response",
@@ -98,14 +120,18 @@
     "swaggerDoc": "",
     "x": 210,
     "y": 360,
-    "wires": [["validate-sample"]]
+    "wires": [
+      [
+        "validate-sample"
+      ]
+    ]
   },
   {
     "id": "validate-sample",
     "type": "function",
     "z": "node-lab-flow",
-    "name": "Allow 22 C or 34 C only",
-    "func": "const origin = String(msg.req?.headers?.origin || '');\nconst allowedOrigin = env.get('NODE_LAB_ALLOWED_ORIGIN') || 'http://127.0.0.1:1880';\nconst raw = msg.payload && typeof msg.payload === 'object' ? msg.payload.temperature : undefined;\nmsg.headers = {'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'};\nif (origin !== allowedOrigin) {\n    msg.statusCode = 403;\n    msg.payload = {error:'same-origin request required'};\n    return [null, msg];\n}\nif (typeof raw !== 'number' || !Number.isFinite(raw) || ![22,34].includes(raw)) {\n    msg.statusCode = 400;\n    msg.payload = {error:'sample must be the JSON number 22 or 34', accepted:false};\n    return [null, msg];\n}\nmsg.payload = raw;\nmsg.topic = 'synthetic-temperature';\nreturn [msg, null];",
+    "name": "Allow 22 C, 30 C or 34 C only",
+    "func": "const origin = String(msg.req?.headers?.origin || '');\nconst allowedOrigin = env.get('NODE_LAB_ALLOWED_ORIGIN') || 'http://127.0.0.1:1880';\nconst raw = msg.payload && typeof msg.payload === 'object' ? msg.payload.temperature : undefined;\nmsg.headers = {'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'};\nif (origin !== allowedOrigin) {\n    msg.statusCode = 403;\n    msg.payload = {error:'same-origin request required'};\n    return [null, msg];\n}\nif (typeof raw !== 'number' || !Number.isFinite(raw) || ![22,30,34].includes(raw)) {\n    msg.statusCode = 400;\n    msg.payload = {error:'sample must be the JSON number 22, 30 or 34', accepted:false};\n    return [null, msg];\n}\nmsg.payload = raw;\nmsg.topic = 'synthetic-temperature';\nreturn [msg, null];",
     "outputs": 2,
     "noerr": 0,
     "initialize": "",
@@ -113,14 +139,21 @@
     "libs": [],
     "x": 500,
     "y": 360,
-    "wires": [["threshold-rule"], ["rejected-response"]]
+    "wires": [
+      [
+        "threshold-rule"
+      ],
+      [
+        "rejected-response"
+      ]
+    ]
   },
   {
     "id": "threshold-rule",
     "type": "function",
     "z": "node-lab-flow",
     "name": "Threshold at 30 C",
-    "func": "const temperature = Number(msg.payload);\nconst alert = temperature >= 30;\nmsg.statusCode = 200;\nmsg.headers = {'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'};\nmsg.payload = {\n    accepted:true,\n    temperature,\n    threshold:30,\n    status:alert ? 'HIGH TEMPERATURE' : 'NORMAL OPERATION',\n    source:'synthetic-demo',\n    sequence:alert ? 'alert' : 'normal'\n};\nnode.status({fill:alert ? 'red' : 'green',shape:'dot',text:temperature + ' C | ' + msg.payload.sequence});\nreturn msg;",
+    "func": "const temperature = Number(msg.payload);\nconst alert = temperature >= 30;\nmsg.statusCode = 200;\nmsg.headers = {'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'};\nmsg.payload = {\n    accepted:true,\n    temperature,\n    threshold:30,\n    validated_temperature_c:temperature,\n    configured_demo_temperature_limit_c:30,\n    comfort_margin_c:Number((30 - temperature).toFixed(1)),\n    status:alert ? 'HIGH TEMPERATURE' : 'NORMAL OPERATION',\n    source:'synthetic-demo',\n    sequence:alert ? 'alert' : 'normal'\n};\nnode.status({fill:alert ? 'red' : 'green',shape:'dot',text:temperature + ' C | ' + msg.payload.sequence});\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
@@ -128,7 +161,11 @@
     "libs": [],
     "x": 760,
     "y": 340,
-    "wires": [["accepted-response"]]
+    "wires": [
+      [
+        "accepted-response"
+      ]
+    ]
   },
   {
     "id": "accepted-response",
@@ -163,14 +200,18 @@
     "swaggerDoc": "",
     "x": 190,
     "y": 500,
-    "wires": [["health-payload"]]
+    "wires": [
+      [
+        "health-payload"
+      ]
+    ]
   },
   {
     "id": "health-payload",
     "type": "function",
     "z": "node-lab-flow",
     "name": "Generator-aware health",
-    "func": "const now=Date.now(); const tick=flow.get('latestTick'); const age=tick ? Math.max(0,now-Date.parse(tick.generatedAt)) : null; const healthy=Boolean(tick) && age <= 5000; msg.statusCode=healthy?200:503; msg.headers={'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}; msg.payload={status:healthy?'ok':'starting',service:'node-lab',runtime:'node-red',version:'2.0.0-base',generator:{intervalMs:1500,lastTickAgeMs:age}}; return msg;",
+    "func": "const now=Date.now(); const tick=flow.get('latestTick'); const age=tick ? Math.max(0,now-Date.parse(tick.generatedAt)) : null; const healthy=Boolean(tick) && age <= 5000; msg.statusCode=healthy?200:503; msg.headers={'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}; msg.payload={status:healthy?'ok':'starting',service:'node-lab',runtime:'node-red',version:'2.0.0',generator:{intervalMs:1500,lastTickAgeMs:age}}; return msg;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
@@ -178,7 +219,11 @@
     "libs": [],
     "x": 470,
     "y": 500,
-    "wires": [["health-response"]]
+    "wires": [
+      [
+        "health-response"
+      ]
+    ]
   },
   {
     "id": "health-response",
@@ -202,7 +247,11 @@
     "swaggerDoc": "",
     "x": 190,
     "y": 580,
-    "wires": [["info-payload"]]
+    "wires": [
+      [
+        "info-payload"
+      ]
+    ]
   },
   {
     "id": "info-payload",
@@ -217,7 +266,11 @@
     "libs": [],
     "x": 460,
     "y": 580,
-    "wires": [["info-response"]]
+    "wires": [
+      [
+        "info-response"
+      ]
+    ]
   },
   {
     "id": "info-response",
@@ -241,14 +294,18 @@
     "swaggerDoc": "",
     "x": 210,
     "y": 660,
-    "wires": [["capture-payload"]]
+    "wires": [
+      [
+        "capture-payload"
+      ]
+    ]
   },
   {
     "id": "capture-payload",
     "type": "function",
     "z": "node-lab-flow",
     "name": "Recording gate facts",
-    "func": "msg.statusCode=200; msg.headers={'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}; msg.payload={recordingPhase:env.get('NODE_LAB_RECORDING_PHASE')||'base-build',reservedChange:{id:'comfort-margin',performed:false,description:'Derive a comfort margin from live temperature and its station threshold, then expose it in flow JSON, API, UI and tests.'},sourceRevision:env.get('NODE_LAB_SOURCE_REVISION')||'development',sourceArchiveSha256:env.get('NODE_LAB_SOURCE_ARCHIVE_SHA256')||'unavailable',artifacts:{prompt:'capture/prompt.md',beforeFunction:'capture/before-live-response.js',deployedFlow:'source/flows.json',telemetrySchema:'source/telemetry.schema.json',runtimeFacts:'api/capture',liveHealth:'healthz'},truth:'These are read-only artifacts from actual edits and checks. No public action can trigger Codex.'}; return msg;",
+    "func": "msg.statusCode=200; msg.headers={'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}; msg.payload={recordingPhase:env.get('NODE_LAB_RECORDING_PHASE')||'recorded-change',reservedChange:{id:'comfort-margin',performed:true,description:'The actual Node-RED response path now derives comfort_margin_c from the configured limit and validated temperature.'},sourceRevision:env.get('NODE_LAB_SOURCE_REVISION')||'development',sourceArchiveSha256:env.get('NODE_LAB_SOURCE_ARCHIVE_SHA256')||'unavailable',artifacts:{prompt:'capture/prompt.md',beforeFunction:'capture/before-live-response.js',functionalDiff:'capture/comfort-margin.diff',validation:'capture/change-validation.json',deployedReadback:'capture/change-readback.json',deployedFlow:'source/flows.json',telemetrySchema:'source/telemetry.schema.json'},truth:'This is a guided recording of an actual bounded edit, checks and release. Inactive build waits may be shortened later with a truthful label; no terminal or completion is fabricated.'}; return msg;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
@@ -256,7 +313,11 @@
     "libs": [],
     "x": 490,
     "y": 660,
-    "wires": [["capture-response"]]
+    "wires": [
+      [
+        "capture-response"
+      ]
+    ]
   },
   {
     "id": "capture-response",

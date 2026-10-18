@@ -20,4 +20,8 @@
 .absence-panel { margin-bottom: 6rem; padding: 2rem; border: 1px solid #67583d; border-radius: 16px; background: #252015; }
 .absence-panel code { color: var(--amber); }
 .gate-note { margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid #55482f; }
+.request-panel { padding: 5rem 0; border-top: 1px solid var(--line-soft); }
+.request-panel h2 { max-width: 1000px; margin: .7rem 0 1.5rem; font-size: clamp(2.3rem, 5vw, 4.5rem); line-height: 1; letter-spacing: -.05em; }
+.request-panel > p { color: #8faa9f; }
+.request-text { margin: 0; padding: 1.5rem; white-space: pre-wrap; overflow-wrap: anywhere; border: 1px solid #315847; border-radius: 14px; color: #d7e8e1; background: #081b15; font: .82rem/1.7 ui-monospace, monospace; }
 @media (max-width: 760px) { .capture-main { width: min(calc(100% - 1.15rem), var(--max)); } .capture-facts, .capture-proof-grid { grid-template-columns: 1fr; } .capture-proof-grid { gap: 1.5rem; } .capture-hero { min-height: 0; padding-top: 7rem; } }

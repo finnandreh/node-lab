@@ -11,6 +11,9 @@
     "sampleKey",
     "generatedAt",
     "intervalMs",
+    "configured_demo_temperature_limit_c",
+    "validated_temperature_c",
+    "comfort_margin_c",
     "stations",
     "scenario",
     "source",
@@ -18,12 +21,18 @@
     "runtime"
   ],
   "properties": {
-    "schemaVersion": {"const": "2.0.0-base"},
+    "schemaVersion": {"const": "2.0.0"},
     "sampleId": {"type": "integer", "minimum": 1},
     "sampleKey": {"type": "string", "pattern": "^NL-[0-9]{8}$"},
     "generatedAt": {"type": "string", "format": "date-time"},
     "intervalMs": {"const": 1500},
     "generationLatencyMs": {"type": "number", "minimum": 0},
+    "configured_demo_temperature_limit_c": {"type": "number"},
+    "validated_temperature_c": {"type": ["number", "null"]},
+    "comfort_margin_c": {
+      "type": ["number", "null"],
+      "description": "Configured demo temperature limit minus validated temperature, in degrees Celsius."
+    },
     "scenario": {
       "type": "object",
       "additionalProperties": false,
@@ -73,7 +82,7 @@
       ],
       "properties": {
         "nodeRedVersion": {"const": "5.0.8"},
-        "flowVersion": {"const": "2.0.0-base"},
+        "flowVersion": {"const": "2.0.0"},
         "uptimeSeconds": {"type": "integer", "minimum": 0},
         "ticksGenerated": {"type": "integer", "minimum": 1},
         "apiResponses": {"type": "integer", "minimum": 1},
@@ -100,6 +109,7 @@
         "ageMs",
         "temperatureC",
         "thresholdC",
+        "comfort_margin_c",
         "powerKw",
         "processValue",
         "processLabel",
@@ -116,6 +126,10 @@
         "ageMs": {"type": "number", "minimum": 0},
         "temperatureC": {"type": ["number", "null"]},
         "thresholdC": {"type": "number"},
+        "comfort_margin_c": {
+          "type": ["number", "null"],
+          "description": "Station limit minus validated station temperature, in degrees Celsius."
+        },
         "powerKw": {"type": ["number", "null"], "minimum": 0},
         "processValue": {"type": "number"},
         "processLabel": {"type": "string"},

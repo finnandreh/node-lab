@@ -3,7 +3,7 @@ kind: NodeTemplate
 metadata:
   id: synthetic-temperature-node
   name: Node Lab live workshop emulation
-  version: 2.0.0-base.3
+  version: 2.0.0
 spec:
   deviceId: synthetic-node-lab-001
   dashboardPath: /

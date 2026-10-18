@@ -34,17 +34,25 @@ def get_json(base, path):
 
 
 def validate_snapshot(snapshot, scenario):
-    expect(snapshot["schemaVersion"] == "2.0.0-base", "schema version mismatch")
+    expect(snapshot["schemaVersion"] == "2.0.0", "schema version mismatch")
     expect(snapshot["scenario"]["id"] == scenario and snapshot["scenario"]["scope"] == "this-response-only", "scenario is not request-scoped")
     expect(snapshot["source"] == {
         "kind": "live-generated-emulation", "hardwareConnected": False,
         "physicalSensors": False, "customerData": False,
     }, "source truth mismatch")
     expect([station["id"] for station in snapshot["stations"]] == ["cnc-cell", "curing-oven", "packing-line"], "station contract mismatch")
+    for station in snapshot["stations"]:
+        if station["temperatureC"] is None:
+            expect(station["comfort_margin_c"] is None, f"missing observation has a margin: {station['id']}")
+        else:
+            expected = round(station["thresholdC"] - station["temperatureC"], 1)
+            expect(station["comfort_margin_c"] == expected, f"station margin mismatch: {station['id']}")
+    primary = snapshot["stations"][0]
+    expect(snapshot["configured_demo_temperature_limit_c"] == primary["thresholdC"], "configured limit mismatch")
+    expect(snapshot["validated_temperature_c"] == primary["temperatureC"], "validated temperature mismatch")
+    expect(snapshot["comfort_margin_c"] == primary["comfort_margin_c"], "top-level margin is not from the same sample")
     for field in ("ticksGenerated", "apiResponses", "messagesProcessed", "uptimeSeconds", "generationLatencyMs", "responseBuildMs", "tickAgeMs", "generatorIntervalMs"):
         expect(isinstance(snapshot["runtime"][field], (int, float)), f"runtime metric missing: {field}")
-    encoded = json.dumps(snapshot)
-    expect("comfort_margin_c" not in encoded and "comfortMarginC" not in encoded, "reserved field leaked")
 
 
 def main():
@@ -55,7 +63,7 @@ def main():
 
     status, health = get_json(args.base, "healthz")
     expect(status == 200 and health["status"] == "ok", "health contract failed")
-    expect(health["version"] == "2.0.0-base", "health version mismatch")
+    expect(health["version"] == "2.0.0", "health version mismatch")
     expect(health["generator"]["intervalMs"] == 1500 and health["generator"]["lastTickAgeMs"] <= 5000, "generator health failed")
 
     status, headers, page = request(args.base, "")
@@ -81,11 +89,14 @@ def main():
     by_id = {station["id"]: station for station in fault["stations"]}
     expect(by_id["cnc-cell"]["health"] == "ALERT", "fault alert absent")
     expect(by_id["packing-line"]["quality"] == "missing" and by_id["packing-line"]["ageMs"] >= 10000, "missing/stale state absent")
+    expect(by_id["cnc-cell"]["comfort_margin_c"] == -5.2, "above-limit fault margin mismatch")
+    expect(by_id["packing-line"]["comfort_margin_c"] is None, "missing observation margin must be null")
 
     status, recovered = get_json(args.base, "api/live?scenario=recover")
     validate_snapshot(recovered, "recover")
     expect(status == 200 and all(s["quality"] == "good" for s in recovered["stations"]), "recovery not fresh")
     expect(any(s["health"] == "RECOVERING" for s in recovered["stations"]), "recovery state absent")
+    expect(recovered["comfort_margin_c"] == 2.5, "recovery margin mismatch")
 
     status, isolated = get_json(args.base, "api/live?scenario=normal")
     validate_snapshot(isolated, "normal")
@@ -93,9 +104,13 @@ def main():
     status, rejected = get_json(args.base, "api/live?scenario=invalid")
     expect(status == 400 and rejected.get("accepted") is False, "invalid scenario was not rejected")
 
-    for temperature, expected in ((22, "NORMAL OPERATION"), (34, "HIGH TEMPERATURE"), (22, "NORMAL OPERATION")):
+    for temperature, expected, margin in ((22, "NORMAL OPERATION", 8), (34, "HIGH TEMPERATURE", -4), (30, "HIGH TEMPERATURE", 0), (22, "NORMAL OPERATION", 8)):
         status, _, body = request(args.base, "api/sample", method="POST", origin=args.origin, payload={"temperature": temperature})
-        expect(status == 200 and json.loads(body)["status"] == expected, f"legacy sample failed: {temperature}")
+        result = json.loads(body)
+        expect(status == 200 and result["status"] == expected, f"legacy sample failed: {temperature}")
+        expect(result["validated_temperature_c"] == temperature, "fixture validated temperature mismatch")
+        expect(result["configured_demo_temperature_limit_c"] == 30, "fixture limit mismatch")
+        expect(result["comfort_margin_c"] == margin, f"fixture margin mismatch: {temperature}")
     for payload in ({"temperature": 99}, {"temperature": "22"}):
         status, _, body = request(args.base, "api/sample", method="POST", origin=args.origin, payload=payload)
         expect(status == 400 and json.loads(body).get("accepted") is False, "malformed legacy sample accepted")
@@ -103,12 +118,12 @@ def main():
     expect(status == 403, "cross-origin sample was not denied")
 
     status, capture = get_json(args.base, "api/capture")
-    expect(status == 200 and capture["reservedChange"]["performed"] is False, "recording baseline is not intact")
+    expect(status == 200 and capture["reservedChange"]["performed"] is True, "recorded change is not reported")
     for admin_path in ("admin/", "admin/flows", "admin/nodes", "admin/auth/login"):
         status, _, _ = request(args.base, admin_path)
         expect(status in (403, 404), f"editor/admin unexpectedly reachable at {admin_path}: {status}")
 
-    print("NODE_LAB_V2_BASE_CONTRACT_OK ticks=advanced scenarios=isolated fault=stale recovery=fresh invalid=400 legacy=bounded editor_api=denied reserved_change=absent")
+    print("NODE_LAB_V2_COMFORT_CONTRACT_OK ticks=advanced scenarios=isolated margins=same-sample fixtures=22:8,34:-4,30:0 missing=null malformed=400 recovery=2.5 editor_api=denied")
 
 
 if __name__ == "__main__":

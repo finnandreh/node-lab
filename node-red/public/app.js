@@ -71,6 +71,7 @@
     const stationState = cardField(card, "state");
     const threshold = cardField(card, "threshold");
     const age = cardField(card, "age");
+    const comfortMargin = cardField(card, "comfort-margin");
 
     temperature.textContent = Number.isFinite(station.temperatureC) ? station.temperatureC.toFixed(1) : "—";
     power.textContent = Number.isFinite(station.powerKw) ? `${station.powerKw.toFixed(1)} kW` : "—";
@@ -81,6 +82,7 @@
     threshold.textContent = station.thresholdC;
     quality.textContent = station.quality === "good" ? "Valid emulated signal" : "Missing emulated signal";
     age.textContent = formatAge(station.ageMs);
+    comfortMargin.textContent = Number.isFinite(station.comfort_margin_c) ? `${station.comfort_margin_c.toFixed(1)} °C` : "Unavailable";
 
     if (appendHistory && Number.isFinite(station.temperatureC)) {
       const history = state.histories.get(station.id);
@@ -125,6 +127,8 @@
   function renderSnapshot(snapshot) {
     const appendHistory = snapshot.sampleKey !== state.lastHistorySample;
     state.lastSnapshot = snapshot;
+    dashboard.dataset.sampleKey = snapshot.sampleKey;
+    dashboard.dataset.comfortMargin = Number.isFinite(snapshot.comfort_margin_c) ? snapshot.comfort_margin_c.toFixed(1) : "unavailable";
     if (appendHistory) state.lastHistorySample = snapshot.sampleKey;
     dashboard.dataset.dashboardHealth = "online";
     text("connection-label", "Node-RED stream active");
@@ -139,6 +143,11 @@
     text("metric-messages", formatInteger(snapshot.runtime.messagesProcessed));
     text("metric-uptime", formatUptime(snapshot.runtime.uptimeSeconds));
     text("metric-latency", `${snapshot.runtime.generationLatencyMs} ms`);
+    const summary = document.querySelector(".comfort-summary");
+    const marginAvailable = Number.isFinite(snapshot.comfort_margin_c);
+    text("comfort-margin-value", marginAvailable ? snapshot.comfort_margin_c.toFixed(1) : "Unavailable");
+    text("comfort-margin-source", `CNC Cell · limit ${snapshot.configured_demo_temperature_limit_c.toFixed(1)} °C · ${snapshot.sampleKey}`);
+    if (summary) summary.dataset.comfortState = marginAvailable ? (snapshot.comfort_margin_c < 0 ? "negative" : "available") : "unavailable";
     snapshot.stations.forEach((station) => updateStation(station, appendHistory));
     updateEventHistory(snapshot);
     text("scenario-message", `${snapshot.sampleKey} accepted · ${snapshot.scenario.scope.replaceAll("-", " ")}.`);
@@ -218,6 +227,7 @@
       }
       text("validation-value", result.temperature);
       text("validation-status", result.status === "HIGH TEMPERATURE" ? "High temperature" : "Normal operation");
+      text("validation-margin", `${result.comfort_margin_c.toFixed(1)} °C`);
       text("validation-message", `${label} accepted by the real validation flow.`);
       document.querySelector(".validation-result").dataset.validationState = result.status === "HIGH TEMPERATURE" ? "alert" : "normal";
     } catch (error) {

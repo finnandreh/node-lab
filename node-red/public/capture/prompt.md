@@ -1,7 +1,8 @@
-# Reserved Node Lab change request
+# Accepted Node Lab change request
 
-This request is intentionally not implemented in the `v2.0.0-base` source. It
-is reserved for one authentic, coordinated recording after `RECORDING-START`.
+This is the actual bounded request accepted after `RECORDING-START`. The exact
+`v2.0.0-base` tag and archive preserve the before-state; the released source
+implements and verifies the request below.
 
 > In this existing Node Lab teaching project, add a Comfort margin value to the
 > live-generated simulation. Define `comfort_margin_c` as the configured demo

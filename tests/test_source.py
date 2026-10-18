@@ -24,7 +24,7 @@ class PublicSourceContract(unittest.TestCase):
         self.assertEqual(package["dependencies"]["node-red"], "5.0.8")
         self.assertEqual(package["dependencies"]["@flowfuse/node-red-dashboard"], "1.33.0")
         self.assertEqual(lock["packages"][""]["name"], "node-lab-runtime")
-        self.assertEqual(lock["packages"][""]["version"], "2.0.0-base.3")
+        self.assertEqual(lock["packages"][""]["version"], "2.0.0")
 
     def test_live_generator_and_request_scoped_scenarios(self):
         flows = json.loads(self.read("node-red/flows.json"))
@@ -43,13 +43,21 @@ class PublicSourceContract(unittest.TestCase):
         self.assertEqual(by_id["live-http"]["url"], "/api/live")
         self.assertEqual(by_id["health-http"]["url"], "/healthz")
 
-    def test_reserved_change_is_functionally_absent(self):
+    def test_comfort_margin_is_in_actual_flow_schema_and_ui(self):
         executing = "\n".join((self.read("node-red/flows.json"), self.read("node-red/public/app.js"), self.read("telemetry.schema.json")))
-        self.assertNotIn("comfort_margin_c", executing)
-        self.assertNotIn("comfortMarginC", executing)
+        self.assertIn("comfort_margin_c", executing)
+        self.assertIn("station.thresholdC - station.temperatureC", executing)
+        self.assertIn("configured_demo_temperature_limit_c", executing)
         page = self.read("node-red/public/index.html")
-        self.assertIn("reserved Comfort margin extension is deliberately absent", page)
-        self.assertNotIn('data-field="comfort-margin"', page)
+        self.assertIn("Comfort margin", page)
+        self.assertEqual(page.count('data-field="comfort-margin"'), 3)
+        self.assertIn('id="comfort-margin-value"', page)
+
+    def test_actual_request_is_readable_in_capture_html(self):
+        capture = self.read("node-red/public/capture/index.html")
+        self.assertIn("Actual submitted teaching request", capture)
+        self.assertIn("Define comfort_margin_c as the configured demo temperature limit", capture)
+        self.assertIn("not a simulated chat", capture)
 
     def test_public_page_contract(self):
         page = self.read("node-red/public/index.html")
@@ -80,7 +88,7 @@ class PublicSourceContract(unittest.TestCase):
         dockerfile = self.read("node-red/Dockerfile")
         self.assertIn("COPY telemetry.schema.json ./seed/public/source/telemetry.schema.json", dockerfile)
         schema = json.loads(self.read("telemetry.schema.json"))
-        self.assertEqual(schema["properties"]["schemaVersion"]["const"], "2.0.0-base")
+        self.assertEqual(schema["properties"]["schemaVersion"]["const"], "2.0.0")
 
     def test_default_compose_is_loopback_and_restricted(self):
         compose = self.read("compose.yaml")

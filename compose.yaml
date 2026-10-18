@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: node-red/Dockerfile
-    image: local/node-lab:2.0.0-base
+    image: local/node-lab:2.0.0
     container_name: node-lab-example
     restart: "no"
     environment:

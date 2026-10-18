@@ -28,12 +28,12 @@ Open the public flow JSON, schema, prompt and source archive. Build the pinned
 image locally, run the contract test and compare the revision and archive hash
 with the read-only capture facts.
 
-## Authentic reserved edit
+## Authentic recorded edit
 
-Record the real bounded Comfort margin request only after the coordinated
-recording gate begins. Capture the actual edit, diff, deterministic fixtures,
-release and deployed readback. Do not use a fabricated terminal, replay or
-pre-completed source.
+The real bounded Comfort margin request begins only after the coordinated
+recording gate. Capture the actual edit, diff, deterministic fixtures, release
+and deployed readback. The baseline remains available for a truthful before
+comparison; do not use a fabricated terminal, replay or simulated chat.
 
 ## Limits and close
 

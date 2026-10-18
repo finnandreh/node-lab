@@ -111,10 +111,15 @@ h1 { max-width: 850px; margin: 0; font-size: clamp(3.8rem, 7.4vw, 7.3rem); line-
 .panel-title h3 { margin: .35rem 0 0; font-size: 1.18rem; }
 .panel-title > p { max-width: 520px; margin: 0; color: #78998c; font-size: .7rem; text-align: right; }
 .panel-title > span { color: #7fa295; font-size: .68rem; }
-.runtime-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7rem; }
+.runtime-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: .7rem; }
 .runtime-grid article { min-width: 0; padding: 1rem; border-radius: 10px; background: #102a22; border: 1px solid #2a5141; }
 .runtime-grid span, .runtime-grid small { display: block; color: #79998d; font-size: .63rem; }
 .runtime-grid strong { display: block; margin: .55rem 0 .25rem; color: var(--blue); font: 800 clamp(1.3rem, 2.7vw, 2.3rem)/1 ui-monospace, monospace; overflow-wrap: anywhere; }
+.runtime-grid .comfort-summary { border-color: #4f7045; background: #162c1d; }
+.runtime-grid .comfort-summary strong { color: var(--green); }
+.runtime-grid .comfort-summary[data-comfort-state="negative"] { border-color: #884438; background: #34201d; }
+.runtime-grid .comfort-summary[data-comfort-state="negative"] strong,
+.runtime-grid .comfort-summary[data-comfort-state="unavailable"] strong { color: var(--coral); }
 
 .station-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; padding: 0 1rem; }
 .station-card { min-width: 0; overflow: hidden; border: 1px solid #2d5545; border-radius: 15px; background: linear-gradient(150deg, #0f2a21, #091c16); }
@@ -127,7 +132,7 @@ h1 { max-width: 850px; margin: 0; font-size: clamp(3.8rem, 7.4vw, 7.3rem); line-
 .station-main > strong { font: 800 clamp(3.3rem, 6vw, 5.6rem)/.95 ui-monospace, monospace; letter-spacing: -.08em; }
 .station-main > span { margin-left: .4rem; color: #8ba99d; font-size: 1.2rem; }
 .station-main > small { display: block; margin-top: .55rem; color: var(--green); font-size: .66rem; font-weight: 900; letter-spacing: .09em; }
-.station-stats { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0 1.2rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.station-stats { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0 1.2rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .station-stats div { min-width: 0; padding: .8rem .45rem; }
 .station-stats div + div { border-left: 1px solid var(--line); }
 .station-stats span, .station-stats strong { display: block; overflow-wrap: anywhere; }
