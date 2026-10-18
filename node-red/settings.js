@@ -7,7 +7,7 @@ module.exports = {
     flowFilePretty: true,
     credentialSecret: false,
     disableEditor: !editorEnabled,
-    httpAdminRoot: "/admin",
+    httpAdminRoot: editorEnabled ? "/admin" : false,
     httpNodeRoot: "/",
     httpStatic: "/data/public",
     httpStaticRoot: "/",
@@ -38,4 +38,3 @@ module.exports = {
         next();
     }
 };
-

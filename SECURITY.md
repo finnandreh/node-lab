@@ -1,8 +1,9 @@
 # Security and truth boundary
 
-- Public input is restricted to exact numeric samples `22` and `34` and an
+- Public input is restricted to exact JSON numeric samples `22` and `34` and an
   exact configured same-origin request. The deliberate `99` test returns 400.
-- The production editor/admin surface is disabled. The supplied editor profile
+- The production `httpAdminRoot` is `false`, disabling both editor and admin
+  API. The supplied editor profile conditionally mounts `/admin`,
   binds to loopback and uses a separate volume.
 - The container runs as a non-root user with a read-only root filesystem,
   dropped capabilities, `no-new-privileges`, resource limits and no Docker
@@ -17,4 +18,3 @@ system, safety controller or proof of physical hardware behavior.
 
 Report security concerns privately to the repository owner. Do not include
 credentials or sensitive production details in a public issue.
-

@@ -36,6 +36,7 @@ class PublicSourceContract(unittest.TestCase):
         validator = by_id["validate-sample"]["func"]
         threshold = by_id["threshold-rule"]["func"]
         self.assertIn("[22,34]", validator)
+        self.assertIn("typeof raw !== 'number'", validator)
         self.assertIn("NODE_LAB_ALLOWED_ORIGIN", validator)
         self.assertIn("statusCode = 400", validator)
         self.assertIn("temperature >= 30", threshold)
@@ -59,6 +60,10 @@ class PublicSourceContract(unittest.TestCase):
         self.assertIn("no-new-privileges:true", compose)
         self.assertIn("cap_drop:", compose)
         self.assertIn("internal: true", compose)
+
+    def test_production_admin_root_is_disabled(self):
+        settings = (NODE_RED / "settings.js").read_text(encoding="utf-8")
+        self.assertIn('httpAdminRoot: editorEnabled ? "/admin" : false', settings)
 
     def test_no_private_topology_in_public_tree(self):
         forbidden = (

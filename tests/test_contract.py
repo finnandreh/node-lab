@@ -74,6 +74,16 @@ def main():
     invalid = json.loads(body)
     expect(status == 400 and invalid.get("accepted") is False, "invalid 99 was not rejected")
 
+    status, _, body = request(
+        args.base,
+        "api/sample",
+        method="POST",
+        origin=args.origin,
+        payload={"temperature": "22"},
+    )
+    invalid_type = json.loads(body)
+    expect(status == 400 and invalid_type.get("accepted") is False, "string 22 was coerced instead of rejected")
+
     status, _, _ = request(
         args.base,
         "api/sample",
@@ -88,12 +98,12 @@ def main():
     expect(status == 200 and info["synthetic"] is True, "truth endpoint failed")
     expect(info["physicalDevice"] is False and info["liveAiInference"] is False, "truth boundary failed")
 
-    status, _, _ = request(args.base, "admin/")
-    expect(status in (403, 404), f"editor/admin unexpectedly reachable: {status}")
+    for admin_path in ("admin/", "admin/flows", "admin/nodes", "admin/auth/login"):
+        status, _, _ = request(args.base, admin_path)
+        expect(status in (403, 404), f"editor/admin unexpectedly reachable at {admin_path}: {status}")
 
-    print("NODE_LAB_CONTRACT_OK normal=22 alert=34 recovery=22 invalid=400 cross_origin=403 editor=denied")
+    print("NODE_LAB_CONTRACT_OK normal=22 alert=34 recovery=22 invalid=400 strict_type=400 cross_origin=403 editor_api=denied")
 
 
 if __name__ == "__main__":
     main()
-

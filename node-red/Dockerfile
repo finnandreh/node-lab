@@ -13,7 +13,7 @@ COPY flows.json ./seed/public/source/flows.json
 
 RUN chmod 0555 /opt/node-lab/seed/runtime-entrypoint.sh /opt/node-lab/seed/healthcheck.js \
     && mkdir -p /data \
-    && chown -R node-red:node-red /data /opt/node-lab
+    && chown node-red:node-red /data
 
 USER node-red
 WORKDIR /data

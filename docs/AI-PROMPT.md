@@ -6,7 +6,8 @@ truthful data path without connecting hardware or an AI inference service.
 ## Required flow
 
 - Receive a same-origin JSON temperature from a public page.
-- Accept only the fixed synthetic values 22 C and 34 C.
+- Accept only the fixed JSON numeric values 22 C and 34 C; reject strings and
+  coercible values.
 - Reject every other value, including the explicit test value 99 C, with HTTP
   400 before state presentation changes.
 - Apply one visible rule: alert when temperature is greater than or equal to
@@ -36,4 +37,3 @@ truthful data path without connecting hardware or an AI inference service.
 Treat generated files as a candidate. Validate JSON, build the pinned image,
 exercise accepted/rejected cases, inspect the public authorization boundary,
 check desktop/mobile rendering, and retain a scoped rollback before release.
-
