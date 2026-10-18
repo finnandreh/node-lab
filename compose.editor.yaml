@@ -1,0 +1,31 @@
+services:
+  node-red:
+    build:
+      context: ./node-red
+      dockerfile: Dockerfile
+    image: local/node-lab:1.0.0
+    container_name: node-lab-editor
+    restart: "no"
+    environment:
+      NODE_LAB_EDITOR_ENABLED: "1"
+      NODE_LAB_ALLOWED_ORIGIN: http://127.0.0.1:1882
+      TZ: Etc/UTC
+    ports:
+      - "127.0.0.1:1882:1880"
+    volumes:
+      - node_lab_editor_data:/data
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 384m
+    cpus: 0.75
+    init: true
+
+volumes:
+  node_lab_editor_data:
+    name: node_lab_editor_data

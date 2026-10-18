@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://teachthecompany.com/node-lab/source/telemetry.schema.json",
+  "title": "Node Lab synthetic temperature result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["temperature", "threshold", "status", "source", "sequence"],
+  "properties": {
+    "temperature": {
+      "type": "number",
+      "enum": [22, 34],
+      "description": "Synthetic degrees Celsius selected by the visitor."
+    },
+    "threshold": {
+      "type": "number",
+      "const": 30
+    },
+    "status": {
+      "type": "string",
+      "enum": ["NORMAL OPERATION", "HIGH TEMPERATURE"]
+    },
+    "source": {
+      "type": "string",
+      "const": "synthetic-demo"
+    },
+    "sequence": {
+      "type": "string",
+      "enum": ["normal", "alert"]
+    }
+  }
+}
+

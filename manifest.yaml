@@ -1,0 +1,27 @@
+apiVersion: battery-node-cloud/v1
+kind: NodeTemplate
+metadata:
+  id: synthetic-temperature-node
+  name: Node Lab synthetic temperature flow
+  version: 1.0.0
+spec:
+  deviceId: synthetic-node-lab-001
+  dashboardPath: /
+  telemetry:
+    topic: local/node-lab/synthetic-temperature
+    schema: telemetry.schema.json
+    staleAfterSeconds: 0
+    source: synthetic-only
+  commands:
+    viewer: []
+    operator: []
+    service: []
+  safety:
+    maxOutputOnSeconds: 1
+    outputOffBeforeOta: true
+    notes: No output or OTA command exists; required safety fields are fail-closed.
+  files:
+    flows: node-red/flows.json
+    settings: node-red/settings.js
+    dockerfile: node-red/Dockerfile
+

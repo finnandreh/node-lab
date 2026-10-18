@@ -1,0 +1,5 @@
+backups/
+evidence/
+*.log
+node-red/public/source/node-lab-source-*.zip
+

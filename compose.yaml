@@ -1,0 +1,50 @@
+services:
+  node-red:
+    build:
+      context: ./node-red
+      dockerfile: Dockerfile
+    image: local/node-lab:1.0.0
+    container_name: node-lab-example
+    restart: "no"
+    environment:
+      NODE_LAB_EDITOR_ENABLED: "0"
+      NODE_LAB_ALLOWED_ORIGIN: http://127.0.0.1:1880
+      TZ: Etc/UTC
+    ports:
+      - "127.0.0.1:1880:1880"
+    volumes:
+      - node_lab_example_data:/data
+    networks:
+      - node_lab_example_internal
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 384m
+    cpus: 0.75
+    init: true
+    stop_grace_period: 20s
+    healthcheck:
+      test: ["CMD", "node", "/opt/node-lab/seed/healthcheck.js"]
+      interval: 15s
+      timeout: 4s
+      retries: 8
+      start_period: 30s
+    logging:
+      driver: local
+      options:
+        max-size: 5m
+        max-file: "3"
+
+volumes:
+  node_lab_example_data:
+    name: node_lab_example_data
+
+networks:
+  node_lab_example_internal:
+    name: node_lab_example_internal
+    internal: true

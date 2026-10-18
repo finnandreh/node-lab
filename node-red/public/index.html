@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Node Lab | Teach the Company</title>
+  <meta name="description" content="Run a real, bounded Node-RED temperature flow and inspect how synthetic input becomes a validated decision.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#071713">
+  <link rel="canonical" href="https://teachthecompany.com/node-lab/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Node Lab | Teach the Company">
+  <meta property="og:description" content="A real Node-RED flow, transparent synthetic data, and an inspectable AI-assisted workflow.">
+  <meta property="og:url" content="https://teachthecompany.com/node-lab/">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to Node Lab</a>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Teach the Company home">
+      <span class="brand-mark" aria-hidden="true">N<span>→</span></span>
+      <span>Teach the Company <strong>Node Lab</strong></span>
+    </a>
+    <nav aria-label="Node Lab navigation">
+      <a href="#live-demo">Live flow</a>
+      <a href="#inside">Inside the flow</a>
+      <a href="#source">Source</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Real Node-RED runtime · synthetic data</p>
+        <h1 id="hero-title">Turn one signal into a decision you can inspect.</h1>
+        <p class="hero-lede">Node Lab is a small, honest automation lesson. Send a known temperature, watch a real Node-RED function evaluate it, and trace every step from input to output.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#live-demo">Run the flow</a>
+          <a class="button secondary" href="source/flows.json">Inspect flow JSON</a>
+        </div>
+        <ul class="truth-row" aria-label="Demo boundaries">
+          <li><span aria-hidden="true">✓</span> Live container</li>
+          <li><span aria-hidden="true">✓</span> Real threshold logic</li>
+          <li><span aria-hidden="true">—</span> No device connected</li>
+        </ul>
+      </div>
+
+      <div class="hero-diagram" aria-label="Flow overview">
+        <div class="diagram-orbit orbit-one"></div>
+        <div class="diagram-orbit orbit-two"></div>
+        <div class="diagram-node input-node">
+          <span>01 · INPUT</span>
+          <strong>22 °C</strong>
+          <small>Synthetic sample</small>
+        </div>
+        <div class="diagram-link link-one" aria-hidden="true"></div>
+        <div class="diagram-node rule-node">
+          <span>02 · FUNCTION</span>
+          <strong>≥ 30 °C?</strong>
+          <small>Node-RED rule</small>
+        </div>
+        <div class="diagram-link link-two" aria-hidden="true"></div>
+        <div class="diagram-node output-node">
+          <span>03 · OUTPUT</span>
+          <strong>Normal</strong>
+          <small>Validated JSON</small>
+        </div>
+        <div class="diagram-caption">Every box maps to an inspectable node.</div>
+      </div>
+    </section>
+
+    <section class="demo-section" id="live-demo" aria-labelledby="demo-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Live experiment</p>
+          <h2 id="demo-title">Move through normal, alert, and recovery.</h2>
+        </div>
+        <p>Each accepted click makes a same-origin request to the real flow. Your chart stays in this browser tab; visitors never share writable state.</p>
+      </div>
+
+      <div class="demo-shell" data-demo-state="normal">
+        <div class="demo-toolbar">
+          <span><i aria-hidden="true"></i> NODE-RED 5.0.8</span>
+          <span class="synthetic-pill">SYNTHETIC · NO HARDWARE</span>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="metric-card">
+            <p class="card-label">SIMULATED ROOM SENSOR</p>
+            <div class="temperature"><span id="temperature-value">22</span><small>°C</small></div>
+            <div class="meter" aria-hidden="true"><span id="temperature-meter"></span><b></b></div>
+            <div class="meter-scale"><span>0</span><span>Alert at 30 °C</span><span>50</span></div>
+            <div class="api-path"><span>POST</span> /api/sample</div>
+          </article>
+
+          <article class="status-card" aria-live="polite">
+            <p class="card-label">FLOW RESULT</p>
+            <div class="status-symbol" id="status-symbol" aria-hidden="true">✓</div>
+            <h3 id="status-heading">Normal operation</h3>
+            <p id="status-description">The sample is below the 30 °C threshold.</p>
+            <span class="result-pill" id="result-pill">200 · accepted</span>
+          </article>
+        </div>
+
+        <article class="chart-card">
+          <div class="chart-heading">
+            <div>
+              <p class="card-label">THIS TAB'S ACCEPTED SAMPLES</p>
+              <h3>See the state change, then recover.</h3>
+            </div>
+            <span id="sample-count">1 sample</span>
+          </div>
+          <svg class="chart" viewBox="0 0 1000 190" preserveAspectRatio="none" role="img" aria-labelledby="chart-title chart-desc">
+            <title id="chart-title">Synthetic temperature history</title>
+            <desc id="chart-desc">Accepted samples in this browser tab, with the alert threshold at 30 degrees Celsius.</desc>
+            <line class="grid-line" x1="0" y1="152" x2="1000" y2="152"></line>
+            <line class="threshold-line" x1="0" y1="76" x2="1000" y2="76"></line>
+            <polyline id="history-line" points="0,118 1000,118"></polyline>
+          </svg>
+          <div class="chart-legend"><span><i class="legend-signal"></i> Accepted temperature</span><span><i class="legend-threshold"></i> 30 °C threshold</span></div>
+        </article>
+
+        <div class="demo-controls" aria-label="Synthetic sample controls">
+          <button type="button" data-temperature="22" data-label="normal"><span>1</span><strong>Normal</strong><small>Send 22 °C</small></button>
+          <button type="button" data-temperature="34" data-label="alert"><span>2</span><strong>Alert</strong><small>Send 34 °C</small></button>
+          <button type="button" data-temperature="22" data-label="recovery"><span>3</span><strong>Recover</strong><small>Return to 22 °C</small></button>
+          <button class="invalid-control" type="button" data-temperature="99" data-label="invalid"><span>×</span><strong>Invalid</strong><small>Prove 99 °C is rejected</small></button>
+        </div>
+        <p class="demo-message" id="demo-message" aria-live="polite">Ready. Start with the normal 22 °C sample.</p>
+      </div>
+    </section>
+
+    <section class="flow-section" id="inside" aria-labelledby="flow-title">
+      <div class="section-heading compact">
+        <div>
+          <p class="eyebrow">Inside the runtime</p>
+          <h2 id="flow-title">The page and the flow tell the same story.</h2>
+        </div>
+        <p>No hidden model call. No device. No animation pretending to be a backend.</p>
+      </div>
+
+      <div class="flow-track" aria-label="Node-RED processing steps">
+        <article><span>HTTP IN</span><strong>Bounded sample</strong><p>Receives same-origin JSON from this page.</p><code>/api/sample</code></article>
+        <i aria-hidden="true">→</i>
+        <article><span>FUNCTION</span><strong>Allow only 22 or 34</strong><p>Rejects every other input before evaluation.</p><code>99 → HTTP 400</code></article>
+        <i aria-hidden="true">→</i>
+        <article><span>FUNCTION</span><strong>Threshold at 30</strong><p>Maps the accepted value to normal or alert.</p><code>t ≥ 30</code></article>
+        <i aria-hidden="true">→</i>
+        <article><span>HTTP RESPONSE</span><strong>Validated result</strong><p>Returns explicit synthetic source and status.</p><code>JSON · no-store</code></article>
+      </div>
+
+      <div class="truth-grid">
+        <article class="truth-card real">
+          <p class="eyebrow">What is real</p>
+          <h3>Runtime evidence</h3>
+          <ul>
+            <li>Node-RED runs in a pinned Docker image.</li>
+            <li>Buttons call the deployed flow over HTTPS.</li>
+            <li>The server validates input and applies the 30 °C rule.</li>
+            <li>Invalid input returns HTTP 400.</li>
+          </ul>
+        </article>
+        <article class="truth-card boundary">
+          <p class="eyebrow">What is deliberately absent</p>
+          <h3>Honest limits</h3>
+          <ul>
+            <li>No physical sensor, actuator, MQTT broker, or customer data.</li>
+            <li>No public editor or arbitrary flow deployment.</li>
+            <li>No live AI inference endpoint.</li>
+            <li>No shared visitor history, account, cookie, or analytics.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="source-section" id="source" aria-labelledby="source-title">
+      <div class="source-copy">
+        <p class="eyebrow">AI-assisted, human-reviewed</p>
+        <h2 id="source-title">Inspect the instruction, the artifact, and the proof.</h2>
+        <p>Codex helped turn a bounded teaching prompt into a Node-RED flow and public explanation. The generated files were reviewed, validated, containerized, and tested before release. The AI did not receive deployment credentials and is not running behind the demo.</p>
+        <div class="source-actions">
+          <a class="button primary" id="github-link" href="https://github.com/finnandreh/node-lab">View on GitHub</a>
+          <a class="button secondary" href="source/node-lab-source-v1.0.0.zip" download>Download source</a>
+        </div>
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-top"><span>AUTHORING PROMPT · EXCERPT</span><span>plain text</span></div>
+        <pre><code>Build a transparent Node-RED lesson:
+
+INPUT    fixed synthetic 22 °C / 34 °C
+RULE     alert when temperature ≥ 30 °C
+OUTPUT   explicit normal or high status
+SAFETY   reject all other public input
+TRUTH    no device and no live AI inference</code></pre>
+        <div class="prompt-links">
+          <a href="source/ai-prompt.md">Read full prompt</a>
+          <a href="source/flows.json">Open resulting flow JSON</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="recording-section" aria-labelledby="recording-title">
+      <div>
+        <p class="eyebrow">Ready for a later recording</p>
+        <h2 id="recording-title">A truthful ten-minute walkthrough is already mapped.</h2>
+      </div>
+      <ol>
+        <li><span>0:00</span> The problem</li>
+        <li><span>1:30</span> Start Docker</li>
+        <li><span>2:30</span> Inspect flow</li>
+        <li><span>4:00</span> Normal and alert</li>
+        <li><span>6:15</span> Failure and recovery</li>
+        <li><span>7:15</span> Review AI artifact</li>
+        <li><span>8:30</span> Reproduce from source</li>
+        <li><span>9:30</span> Limits and next step</li>
+      </ol>
+      <a href="source/demo-storyboard.md">Open the complete storyboard →</a>
+    </section>
+  </main>
+
+  <footer>
+    <div><strong>Node Lab</strong><span>A Teach the Company learning project.</span></div>
+    <p>Built with <a href="https://nodered.org/">Node-RED</a>. Preview lineage credits <a href="https://flowfuse.com/">FlowFuse</a>. AI-assisted with <a href="https://openai.com/codex/">OpenAI Codex</a>. No endorsement implied.</p>
+  </footer>
+</body>
+</html>
+
