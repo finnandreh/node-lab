@@ -4,6 +4,9 @@
   const dashboard = document.querySelector(".dashboard-shell");
   if (!dashboard) return;
 
+  const view = new URLSearchParams(window.location.search).get("view");
+  if (view === "workshop") document.body.classList.add("focus-workshop");
+
   const scenarioButtons = Array.from(document.querySelectorAll("[data-scenario]"));
   const validationButtons = Array.from(document.querySelectorAll("[data-temperature]"));
   const stationCards = new Map(

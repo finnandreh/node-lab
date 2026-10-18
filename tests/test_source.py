@@ -24,7 +24,7 @@ class PublicSourceContract(unittest.TestCase):
         self.assertEqual(package["dependencies"]["node-red"], "5.0.8")
         self.assertEqual(package["dependencies"]["@flowfuse/node-red-dashboard"], "1.33.0")
         self.assertEqual(lock["packages"][""]["name"], "node-lab-runtime")
-        self.assertEqual(lock["packages"][""]["version"], "2.0.0-base.2")
+        self.assertEqual(lock["packages"][""]["version"], "2.0.0-base.3")
 
     def test_live_generator_and_request_scoped_scenarios(self):
         flows = json.loads(self.read("node-red/flows.json"))
@@ -66,6 +66,15 @@ class PublicSourceContract(unittest.TestCase):
         app = self.read("node-red/public/app.js")
         self.assertGreaterEqual(app.count('timeZone: "UTC"'), 2)
         self.assertIn('})} UTC`', app)
+
+    def test_focus_view_reuses_live_dashboard(self):
+        app = self.read("node-red/public/app.js")
+        styles = self.read("node-red/public/styles.css")
+        capture = self.read("node-red/public/capture/index.html")
+        self.assertIn('view === "workshop"', app)
+        self.assertIn(".focus-workshop .station-grid", styles)
+        self.assertIn(".focus-workshop .event-list", styles)
+        self.assertIn('href="../?view=workshop"', capture)
 
     def test_schema_is_packaged_from_single_source(self):
         dockerfile = self.read("node-red/Dockerfile")

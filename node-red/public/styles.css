@@ -266,3 +266,42 @@ h1 { max-width: 850px; margin: 0; font-size: clamp(3.8rem, 7.4vw, 7.3rem); line-
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* Read-only filming/accessibility view: same DOM, data, controls and charts. */
+.focus-workshop .site-header,
+.focus-workshop .hero,
+.focus-workshop .validation-section,
+.focus-workshop .flow-section,
+.focus-workshop .capture-section,
+.focus-workshop .source-section,
+.focus-workshop .site-footer { display: none; }
+.focus-workshop .dashboard-section { width: 100%; padding: .45rem; border: 0; }
+.focus-workshop .dashboard-section > .section-heading { display: none; }
+.focus-workshop .dashboard-shell { border-radius: 10px; }
+.focus-workshop .dashboard-statusbar { min-height: 42px; padding: .45rem .7rem; }
+.focus-workshop .scenario-bar { grid-template-columns: .65fr 1.4fr 1fr; gap: .65rem; padding: .55rem .7rem; }
+.focus-workshop .scenario-controls button { min-height: 35px; padding: .35rem; }
+.focus-workshop .runtime-panel,
+.focus-workshop .event-panel { margin: .45rem; padding: .55rem .7rem; }
+.focus-workshop .panel-title { margin-bottom: .45rem; }
+.focus-workshop .runtime-grid { gap: .4rem; }
+.focus-workshop .runtime-grid article { padding: .55rem .7rem; }
+.focus-workshop .runtime-grid strong { margin: .3rem 0 .15rem; font-size: 1.35rem; }
+.focus-workshop .station-grid { gap: .45rem; padding: 0 .45rem; }
+.focus-workshop .station-card > header { padding: .65rem .7rem .2rem; }
+.focus-workshop .station-main { padding: 0 .7rem .4rem; }
+.focus-workshop .station-main > strong { font-size: 3.35rem; }
+.focus-workshop .station-main > small { margin-top: .3rem; }
+.focus-workshop .station-stats { margin: 0 .7rem; }
+.focus-workshop .station-stats div { padding: .5rem .35rem; }
+.focus-workshop .station-chart { width: calc(100% - 1.4rem); height: 68px; margin: .35rem .7rem; }
+.focus-workshop .station-card > footer { padding: .45rem .7rem; }
+.focus-workshop .event-panel .panel-title h3 { font-size: .95rem; }
+.focus-workshop .event-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+.focus-workshop .event-list li { padding: .45rem; }
+.focus-workshop .event-list li:nth-child(n + 4) { display: none; }
+
+@media (max-width: 1120px), (max-height: 720px) {
+  .focus-workshop .scenario-bar { grid-template-columns: 1fr; }
+  .focus-workshop .event-panel { display: none; }
+}
