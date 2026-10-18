@@ -2,6 +2,15 @@ Sanitized functional diff
 baseline: 576f1a71bbc57e60b71c38d8146a41b212eca32d
 functional revision: d7980d74b0e69ad85e4f11e200f667f66b54f3ce
 
+--- accepted baseline live generator
++++ recorded live generator
+@@
+-temperatureC: round(24.2 + Math.sin(phase) * 1.5), thresholdC: 32,
++temperatureC: round(24.2 + Math.sin(phase) * 1.5), thresholdC: 30,
+
+The CNC teaching limit is deliberately aligned with the retained validation
+lesson before the margin is derived. Other station limits are unchanged.
+
 --- accepted baseline Node-RED response Function
 +++ recorded Comfort margin response Function
 @@
