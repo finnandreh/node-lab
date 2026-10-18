@@ -49,9 +49,10 @@ The production learning page is
 
 ## AI assistance
 
-OpenAI Codex assisted with the flow and public explanation. Humans reviewed
-the generated artifacts, ran the deterministic checks, and controlled the
-release. There is no model endpoint behind the demo.
+OpenAI Codex assisted with the flow and public explanation. Codex agents
+reviewed the generated artifacts and ran the deterministic checks under
+Finn's direction and deployment authorization. There is no model endpoint
+behind the demo.
 
 ## License
 
