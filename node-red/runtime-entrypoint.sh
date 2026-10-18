@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-release="1.0.0"
+release="1.0.0-public-1"
 marker="/data/.node-lab-release"
 current=""
 if [ -f "$marker" ]; then
@@ -21,4 +21,3 @@ fi
 exec node /opt/node-lab/node_modules/node-red/red.js \
     --userDir /data \
     --settings /data/settings.js
-
