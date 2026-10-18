@@ -11,7 +11,9 @@ COPY settings.js flows.json runtime-entrypoint.sh healthcheck.js ./seed/
 COPY public/ ./seed/public/
 COPY flows.json ./seed/public/source/flows.json
 
-RUN chmod 0555 /opt/node-lab/seed/runtime-entrypoint.sh /opt/node-lab/seed/healthcheck.js \
+RUN chmod 0555 /opt/node-lab/seed/runtime-entrypoint.sh \
+    && chmod 0444 /opt/node-lab/seed/settings.js /opt/node-lab/seed/flows.json /opt/node-lab/seed/healthcheck.js \
+    && chmod -R a=rX /opt/node-lab/seed/public \
     && mkdir -p /data \
     && chown node-red:node-red /data
 
