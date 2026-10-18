@@ -59,7 +59,7 @@ class PublicSourceContract(unittest.TestCase):
         self.assertIn("read_only: true", compose)
         self.assertIn("no-new-privileges:true", compose)
         self.assertIn("cap_drop:", compose)
-        self.assertIn("internal: true", compose)
+        self.assertNotIn("network_mode: host", compose)
 
     def test_production_admin_root_is_disabled(self):
         settings = (NODE_RED / "settings.js").read_text(encoding="utf-8")

@@ -15,7 +15,7 @@ services:
     volumes:
       - node_lab_example_data:/data
     networks:
-      - node_lab_example_internal
+      - node_lab_example_bridge
     read_only: true
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
@@ -45,6 +45,5 @@ volumes:
     name: node_lab_example_data
 
 networks:
-  node_lab_example_internal:
-    name: node_lab_example_internal
-    internal: true
+  node_lab_example_bridge:
+    name: node_lab_example_bridge

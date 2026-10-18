@@ -8,7 +8,8 @@
 - The container runs as a non-root user with a read-only root filesystem,
   dropped capabilities, `no-new-privileges`, resource limits and no Docker
   socket.
-- The runtime network is internal. Browser assets are first-party, with no
+- The runtime uses a dedicated bridge and publishes only on loopback by
+  default. Browser assets are first-party, with no
   analytics, account, cookie, external font, model API, hardware bridge or
   customer data.
 - Visitor history exists only in the open browser tab.
